@@ -11,6 +11,9 @@ public class BaccaratGame extends Application {
 	double currentBet;
 	double totalWinnings;
 
+
+	public double evaluateWinnings();
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);

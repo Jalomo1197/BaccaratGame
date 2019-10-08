@@ -16,11 +16,25 @@ public class BaccaratDealer {
 		}
 	}
 	public ArrayList<Card> dealHand(){
-		//ill deal two cards and return them in an ArrayList<Card>
+		//will deal two cards and return them in an ArrayList<Card>
+		
+		Card c1 = deck.get(0);
+		Card c2 = deck.get(1);
+		ArrayList<Card> ret = new ArrayList<Card>();
+		ret.add(c1);
+		ret.add(c2);
+		deck.remove(0);
+		deck.remove(1);
+		return ret;
+		
 	}
 	
 	public Card drawOne() {
 		//drawOne will deal a single card and return it.
+		Card c = deck.get(0);
+		deck.remove(0);
+		return c;
+		
 	}
 	public void shuffleDeck() {
 		//will create a new deck of 52 cards and “shuffle”
@@ -29,7 +43,7 @@ public class BaccaratDealer {
 	}
 	public int deckSize() {
 		//will just return how many cards are in this.deck at any given time.
-		deck.size();
+		return deck.size();
 	}
 	
 }

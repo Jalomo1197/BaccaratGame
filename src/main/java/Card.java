@@ -11,13 +11,13 @@ public class Card {
 	
 	private int value; //from 1-13
 
-	//CONSTRUCTOR
+	//CONSTRUCTOR:
 	Card(String theSuit, int theValue){
 		this.suit = theSuit;
 		this.value = theValue;
-	}
+	}//end Constructor
 	
-	//card overload constructor with suit as int 
+	//card overload constructor with suit as int value
 	//for easy initialization 
 	Card(int suit, int theValue){
 		if (suit == 0) {
@@ -34,16 +34,25 @@ public class Card {
 		}
 		this.value = theValue;
 		
-	}
+	}//end Constructor
 	
 	public int getValue() {
 		return value;
-	}
+	}//end getValue
+	
+	public int getWorth() {
+		//if the card is a 10 or face card it's worth zero points
+		if (value >= 10 ) {
+			return 0;
+		}
+		//if the card is an ace it's worth 1 point
+		else return value;
+	} //end getWorth
 	
 	
 	public String getSuit() {
 		return suit;
-	}
+	} 
 	
 	public String getValueAsString() {
 		switch(value) {

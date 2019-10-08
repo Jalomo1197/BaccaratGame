@@ -5,6 +5,7 @@ public class Card {
 
 	//CONSTRUCTOR
 	Card(String theSuite, int theValue){
-		
+		this.suite = theSuite;
+		this.value = theValue;
 	}
 }

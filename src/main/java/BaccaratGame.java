@@ -26,33 +26,38 @@ public class BaccaratGame extends Application {
 		int bankerTotal = gameLogic.handTotal(bankerHand)
 		boolean pNaturalWin = (playerTotal == 9 || playerTotal == 8);
 		boolean bNaturalWin = (bankerTotal == 9 || bankerTotal == 8);
-		if (winner == "Player" && pNaturalWin){
 
-		}
-		if (winner == "Banker" && bNaturalWin){
+		if (winner == "Player" && pNaturalWin)
+			return currentBet*2;
+		if (winner == "Banker" && bNaturalWin)
+			return (0 - currentBet);
+		else if (winner == "Draw" && pNaturalWin && bNaturalWin)
+			return currentBet;
 
-		}
-		else if (winner == "Draw" && pNaturalWin && bNaturalWin){
-
-		}
-
-		//else we have to add cards to hands in
+		//else we have to add cards to Hands
 		Card newCard; //null
-		if (evaluatePlayerDraw(playerHand)){ //If player does get another card
+		//Player goes first
+		if (gameLogic.evaluatePlayerDraw(playerHand)){ //If player does get another card
 			//size check was done at dealing, so safe to execute.
 			newCard = theDealer.drawOne();
 			playerHand.add(newCard);
 		}
-		if (evaluateBankerDraw(bankerHand, newCard)){
+		//Banker goes second
+		if (gameLogic.evaluateBankerDraw(bankerHand, newCard)){
 			newCard = theDealer.drawOne();
 			bankerHand.add(newCard);
 		}
 
-
 		//call whoWon again
-
+		winner = gameLogic.whoWon(playerHand, bankerHand);
 		//return the amount won or lost based on the value in currentBet.
-		return 0;
+		if (winner == "Player")
+			return currentBet*2;
+		if (winner == "Banker")
+			return (0 - currentBet);
+
+		//else it was a draw and return bids
+		return currentBet;
 	}
 
 

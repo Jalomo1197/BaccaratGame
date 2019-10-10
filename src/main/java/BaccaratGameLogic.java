@@ -38,18 +38,30 @@ public class BaccaratGameLogic {
 	public boolean evaluateBankerDraw(ArrayList<Card> hand, Card playerCard) {
 		//return true if Banker should be dealt a third card, otherwise return false.
 		int total = handTotal(hand);
-		int
+		int playerVal;
 		if (total > 6) {
 			return false;
 		}
 		else if (total < 3) {
 			return true;
 		}
-		else {
 
-			//idk see pdf
-		}
-		return true;
+		//else we know that it depends on the value of the player card, if any.
+		if (playerCard == null && total != 6)
+			return true;
+
+		playerVal = playerCard.getWorth();
+		if (total == 3 && playerVal != 8)
+			return true;
+
+		if (total == 4 && playerVal > 1 && playerVal < 8)
+			return true;
+
+		if (total == 5 && playerVal > 3 && playerVal < 8)
+			return true;
+
+		if (total == 6 && playerVal > 5 && playerVal < 8)
+			return true;
 	}
 
 

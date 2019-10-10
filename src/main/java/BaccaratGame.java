@@ -23,7 +23,7 @@ public class BaccaratGame extends Application {
 		winner = gameLogic.whoWon(playerHand, bankerHand);
 		//check if for 8 or 9s, To check for proper win.
 		int playerTotal = gameLogic.handTotal(playerHand);
-		int bankerTotal = gameLogic.handTotal(bankerHand)
+		int bankerTotal = gameLogic.handTotal(bankerHand);
 		boolean pNaturalWin = (playerTotal == 9 || playerTotal == 8);
 		boolean bNaturalWin = (bankerTotal == 9 || bankerTotal == 8);
 
@@ -35,7 +35,7 @@ public class BaccaratGame extends Application {
 			return currentBet;
 
 		//else we have to add cards to Hands
-		Card newCard; //null
+		Card newCard = null; //null
 		//Player goes first
 		if (gameLogic.evaluatePlayerDraw(playerHand)){ //If player does get another card
 			//size check was done at dealing, so safe to execute.

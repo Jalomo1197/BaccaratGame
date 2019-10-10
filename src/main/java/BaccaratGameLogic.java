@@ -1,61 +1,66 @@
 import java.util.ArrayList;
 
 public class BaccaratGameLogic {
-	public String whoWon(ArrayList<Card> hand1, ArrayList<Card> hand2) {
-		//The method whoWon will evaluate two hands at the end of the game 
+	public String whoWon(ArrayList<Card> playerHand, ArrayList<Card> bankerHand) {
+		//The method whoWon will evaluate two hands at the end of the game
 		//and return a string depending on the winner: “Player”, “Banker”, “Draw”.
 	    //ASSUMING hand1 is the player and hand2 is the Banker
 		//Note: how do we handle if both players have a winning hand?
-		if (handTotal(hand1) == 8 || handTotal(hand1) == 9) {
+		int playerTotal = handTotal(playerHand);
+		int bankerTotal = handTotal(bankerHand);
+		if (playerTotal == 8 || playerTotal == 9) {
+			if (bankerTotal == 8 || bankerTotal == 9)
+				return "Draw";
 			return "Player";
 		}
-		else if (handTotal(hand2) == 8 || handTotal(hand2) == 9) {
+		else if (bankerTotal == 8 || bankerTotal == 9) {
 			return "Banker";
 		}
+		else
+		//closest to 9
+			//player win
+			//baker
 		else return "Draw";
-		
+
 	}
 	public int handTotal(ArrayList<Card> hand) {
 		//take a hand and return how many points that hand is worth.
-		//iterate through hand ArrayList 
+		//iterate through hand ArrayList
 		int handTotal = 0;
-		for(Card c: hand) {
+		for(Card c: hand)
 			handTotal += c.getWorth();
-		}
+
+		if (handTotal > 9)
+				handTotal %= 10;
+
 		return handTotal;
 	}
 	public boolean evaluateBankerDraw(ArrayList<Card> hand, Card playerCard) {
 		//return true if Banker should be dealt a third card, otherwise return false.
-		int tot = handTotal(hand);
-		if (tot >= 7) {
+		int total = handTotal(hand);
+		int
+		if (total > 6) {
 			return false;
 		}
-		else if (tot <= 2) {
+		else if (total < 3) {
 			return true;
 		}
 		else {
-			//idk		
+
+			//idk see pdf
 		}
 		return true;
 	}
+
+
 	public boolean evaluatePlayerDraw(ArrayList<Card> hand) {
 		//return true if Player should be dealt a third card, otherwise return false.
 		int tot = handTotal(hand);
-		
-		if (tot <= 5) {
+
+		if (tot <= 5)
 			return true;
-		}
-		else if (tot == 6 || tot == 7) {
+		else
 			return false;
-		}
-		//if the total is greater than 9 remove the first number from the total
-		else if (tot> 9) {
-			//remove first number?
-			return false;
-		}
-		return false;
-		
 	}
-	
-	
+
 }

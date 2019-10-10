@@ -35,7 +35,7 @@ public class BaccaratGame extends Application {
 			return currentBet;
 
 		//else we have to add cards to Hands
-		Card newCard; //null
+		Card newCard = null; //null
 		//Player goes first
 		if (gameLogic.evaluatePlayerDraw(playerHand)){ //If player does get another card
 			//size check was done at dealing, so safe to execute.

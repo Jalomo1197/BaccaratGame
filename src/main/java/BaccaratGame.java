@@ -21,29 +21,31 @@ public class BaccaratGame extends Application {
 		//if the user won or lost their bet
 		//call whowon
 		winner = gameLogic.whoWon(playerHand, bankerHand);
-		//check if for 8 or 9s in
+		//check if for 8 or 9s, To check for proper win.
 		int playerTotal = gameLogic.handTotal(playerHand);
 		int bankerTotal = gameLogic.handTotal(bankerHand)
-		if (winner == "Player" && (playerTotal == 9 || playerTotal == 8)){
+		boolean pNaturalWin = (playerTotal == 9 || playerTotal == 8);
+		boolean bNaturalWin = (bankerTotal == 9 || bankerTotal == 8);
+		if (winner == "Player" && pNaturalWin){
 
 		}
-		if (winner == "Banker")
-		else
-				//player if player won
-				//banker if bank won
-				//both is draw
+		if (winner == "Banker" && bNaturalWin){
+
+		}
+		else if (winner == "Draw" && pNaturalWin && bNaturalWin){
+
+		}
 
 		//else we have to add cards to hands in
 		Card newCard; //null
 		if (evaluatePlayerDraw(playerHand)){ //If player does get another card
 			//size check was done at dealing, so safe to execute.
-			//draw one
 			newCard = theDealer.drawOne();
 			playerHand.add(newCard);
-			if (evaluateBankerDraw(bankerHand, newCard)){
-				newCard = theDealer.drawOne();
-				bankerHand.add(newCard);
-			}
+		}
+		if (evaluateBankerDraw(bankerHand, newCard)){
+			newCard = theDealer.drawOne();
+			bankerHand.add(newCard);
 		}
 
 

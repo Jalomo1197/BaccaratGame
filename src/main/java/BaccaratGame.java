@@ -22,7 +22,11 @@ public class BaccaratGame extends Application {
 		//call whowon
 		winner = gameLogic.whoWon(playerHand, bankerHand);
 		//check if for 8 or 9s in
-		if (winner == "Player"){}
+		int playerTotal = gameLogic.handTotal(playerHand);
+		int bankerTotal = gameLogic.handTotal(bankerHand)
+		if (winner == "Player" && (playerTotal == 9 || playerTotal == 8)){
+
+		}
 		if (winner == "Banker")
 		else
 				//player if player won

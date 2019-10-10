@@ -62,6 +62,8 @@ public class BaccaratGameLogic {
 
 		if (total == 6 && playerVal > 5 && playerVal < 8)
 			return true;
+
+		return false;
 	}
 
 

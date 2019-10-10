@@ -14,11 +14,29 @@ public class BaccaratGame extends Application {
 	BaccaratGameLogic gameLogic;
 	double currentBet;
 	double totalWinnings;
-	
+
 	public double evaluateWinnings() {
-		//This method will determine 
-		//if the user won or lost their bet and 
+		//This method will determine
+		//if the user won or lost their bet and
 		//return the amount won or lost based on the value in currentBet.
+
+		Card newCard; //null
+		if (evaluatePlayerDraw(playerHand)){ //If player does get another card
+			//size check was done at dealing, so safe to execute.
+			//draw one
+			newCard = theDealer.drawOne();
+			playerHand.add(newCard);
+			if (evaluateBankerDraw(bankerHand, newCard)){
+				newCard = theDealer.drawOne();
+				bankerHand.add(newCard);
+			}
+
+			//add it to the players hand
+			//we keep a local copy to pass to the evaluateBankerDraw
+		}
+
+
+
 		return 0;
 	}
 
@@ -36,12 +54,12 @@ public class BaccaratGame extends Application {
 		Button banker = new Button("BANKER");
 		Button draw = new Button("DRAW");
 		TextField text = new TextField();
-		
+
 		player.setOnAction(e->text.setText("Player"));
 		banker.setOnAction(e->text.setText("banker"));
 		draw.setOnAction(e->text.setText("draw"));
-		
-		
+
+
 		BorderPane layout = new BorderPane();
 		layout.getChildren().addAll(player, banker, draw);
 		primaryStage.setTitle("Let's Play Baccarat!!!");

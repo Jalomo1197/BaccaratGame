@@ -36,7 +36,7 @@ class DealerTest {
 		ArrayList<Card> c = theDealer.dealHand();
 		assertEquals(50, theDealer.deckSize(), "Deal hand doesnt properly deal 2 cards");
 		assertEquals("Card", c.get(0).getClass().getName(),"dealHand() not returning correct type (card) inside array list");
-		
+		assertEquals(2, c.size(), "Deal hand doesn't properly put two cards into the return ArrayList");
 		//checking if dealHand() properly removes the cards dealt from the deck 
 		for (Card pick: c) {
 			assertEquals(false, theDealer.deck.contains(pick), "Dealing a hand doesnt properly remove it from deck.");

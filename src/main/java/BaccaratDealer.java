@@ -16,7 +16,7 @@ public class BaccaratDealer {
 		}
 	}
 
-	public bool EnoughtCard(){
+	public boolean EnoughtCard(){
 		return (this.deckSize() < 6)? false : true;
 	}
 
@@ -37,13 +37,15 @@ public class BaccaratDealer {
 		Card c = deck.get(0);
 		deck.remove(0);
 		return c;
-
 	}
+	
 	public void shuffleDeck() {
 		//will create a new deck of 52 cards and “shuffle”
 		//randomize the cards in that ArrayList<Card>
 		Collections.shuffle(deck);
 	}
+	
+	
 	public int deckSize() {
 		//will just return how many cards are in this.deck at any given time.
 		return deck.size();

@@ -14,12 +14,22 @@ public class BaccaratGame extends Application {
 	BaccaratGameLogic gameLogic;
 	double currentBet;
 	double totalWinnings;
+	String winner; //need to pass winner info accross functions e.g. evaluateWinnings()
 
 	public double evaluateWinnings() {
 		//This method will determine
-		//if the user won or lost their bet and
-		//return the amount won or lost based on the value in currentBet.
+		//if the user won or lost their bet
+		//call whowon
+		winner = gameLogic.whoWon(playerHand, bankerHand);
+		//check if for 8 or 9s in
+		if (winner == "Player"){}
+		if (winner == "Banker")
+		else
+				//player if player won
+				//banker if bank won
+				//both is draw
 
+		//else we have to add cards to hands in
 		Card newCard; //null
 		if (evaluatePlayerDraw(playerHand)){ //If player does get another card
 			//size check was done at dealing, so safe to execute.
@@ -30,19 +40,26 @@ public class BaccaratGame extends Application {
 				newCard = theDealer.drawOne();
 				bankerHand.add(newCard);
 			}
-
-			//add it to the players hand
-			//we keep a local copy to pass to the evaluateBankerDraw
 		}
 
 
+		//call whoWon again
 
+		//return the amount won or lost based on the value in currentBet.
 		return 0;
 	}
 
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
+		//generate deck
+		//check for size (atleast six)
+			//regenerate if needed
+		//deal hands
+		//call evaluateWinnings
+
+
 		launch(args);
 	}
 

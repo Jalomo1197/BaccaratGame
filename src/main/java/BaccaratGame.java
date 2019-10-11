@@ -1,11 +1,29 @@
-import java.util.ArrayList;
 
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.function.Function;
+import java.io.FileInputStream;
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class BaccaratGame extends Application {
 	ArrayList<Card> playerHand;
@@ -60,7 +78,6 @@ public class BaccaratGame extends Application {
 		return currentBet;
 	}
 
-
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
@@ -74,9 +91,24 @@ public class BaccaratGame extends Application {
 		launch(args);
 	}
 
+	//GUI STUFF
+	
+		PauseTransition pause = new PauseTransition(Duration.seconds(3));
+		HashMap<String, Scene> sceneMap; 
+
+		
 	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+	
+		primaryStage.setTitle("Let's Play Baccarat!!!");
+		Scene scene = createStartScene();
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	} //end start function
+	
+	public Scene createGameScene() {
+		
 		// TODO Auto-generated method stub
 		Button player = new Button("PLAYER");
 		Button banker = new Button("BANKER");
@@ -90,10 +122,36 @@ public class BaccaratGame extends Application {
 
 		BorderPane layout = new BorderPane();
 		layout.getChildren().addAll(player, banker, draw);
-		primaryStage.setTitle("Let's Play Baccarat!!!");
-		Scene scene = new Scene(layout,600,600);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		Scene s = new Scene(layout);
+		return s;
 	}
+	
+	//method to create our first scene with controls
+	public Scene createStartScene() {
+		
+	
+		Image pic = new Image("file:src/test/resources/PlayButton.png");
+		ImageView v = new ImageView(pic);
+		//v.setCache(true);
+		//v.setFitHeight(146);
+		//v.setFitWidth(470);
+		//v.setPreserveRatio(true);
+		Button playButton = new Button();
+		//playButton.setOnAction(returnButtons);
+		playButton.setGraphic(v);
+		playButton.setStyle("-fx-background-color:black;");
+
+		VBox startBox = new VBox(playButton);
+		//startBox.setPadding(new Insets(70));
+		//startBox.setSpacing(10);
+		//TextField title = new TextField("stuff");	
+		startBox.setStyle("-fx-background-color:black;");
+		
+		
+		return new Scene(startBox,700, 400);
+		
+	}//end createStartScene
+
+	
 
 }

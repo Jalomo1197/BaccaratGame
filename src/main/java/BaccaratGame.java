@@ -131,7 +131,10 @@ public class BaccaratGame extends Application {
 		
 	
 		Image pic = new Image("file:src/test/resources/PlayButton.png");
+		
+		Image pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false );
 		ImageView v = new ImageView(pic);
+		ImageView v2 = new ImageView(pic2);
 		//v.setCache(true);
 		//v.setFitHeight(146);
 		//v.setFitWidth(470);
@@ -140,10 +143,11 @@ public class BaccaratGame extends Application {
 		//playButton.setOnAction(returnButtons);
 		playButton.setGraphic(v);
 		playButton.setStyle("-fx-background-color:black;");
+		playButton.setOnAction(e->playButton.setGraphic(v2));
 
 		VBox startBox = new VBox(playButton);
-		//startBox.setPadding(new Insets(70));
-		//startBox.setSpacing(10);
+		startBox.setPadding(new Insets(90));
+		startBox.setSpacing(20);
 		//TextField title = new TextField("stuff");	
 		startBox.setStyle("-fx-background-color:black;");
 		

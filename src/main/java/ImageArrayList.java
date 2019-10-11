@@ -66,5 +66,22 @@ public class ImageArrayList{
     cards.add(new Image("file:.../test/resources/KC.jpg"));
   }
 
+  public Image get_suit_num(Card card){
+    String suit = card.getSuit();
+    int val = card.getValue() - 1;
+    int offSet;
+    switch(suit){
+      case "Spades":
+        offSet = 0;
+      case "Hearts":
+        offSet = 14;
+      case "Diamonds":
+        offSet = 27;
+      case "Clubs":
+        offSet = 40;
+    }
+
+    return cards[offSet + val];
+  }
 
 }

@@ -22,6 +22,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -33,7 +36,9 @@ public class BaccaratGame extends Application {
 	double currentBet;
 	double totalWinnings;
 	String winner; //need to pass winner info accross functions e.g. evaluateWinnings()
-
+	
+	String bet; //will either be banker, player or tie
+	
 	public double evaluateWinnings() {
 		//This method will determine
 		//if the user won or lost their bet
@@ -155,6 +160,65 @@ public class BaccaratGame extends Application {
 		return new Scene(startBox,700, 400);
 		
 	}//end createStartScene
+	
+	public Scene createBettingScene() {
+		
+		BorderPane border = new BorderPane();
+	
+		//could also do ChoiceBox : how to we allow the player to only choose one of
+		//the buttons? disable buttons?
+		//HBox to choose 
+		HBox bet = new HBox();
+		Button player = new Button("player");
+		Button banker = new Button("banker");
+		Button tie = new Button("tie");
+		Text text = new Text("Choose Your Winner");
+		text.setFont(Font.font("Arial", FontWeight.BOLD,14) );
+		bet.getChildren().addAll(text, player, banker, tie);
+		
+		
+		//TODO: PICS/IMAGE VIEWS FOR COINTS 
+		//Image pic = new Image("file:");
+		//ImageView v = new ImageView(pic);
+		Button one = new Button("one");
+		one.setOnAction(e->{
+			currentBet++;
+		});
+		
+		//one.setGraphic("one coin pic /plus??);
+		Button five = new Button("five");
+		five.setOnAction(e->{
+			currentBet+= 5;
+		});
+		
+		Button ten = new Button("ten");
+		five.setOnAction(e->{
+			currentBet+= 10;
+		});
+		
+		Button twenty_five = new Button("twenty five");
+		five.setOnAction(e->{
+			currentBet+= 25;
+		});
+		
+		Button fifty = new Button("50");
+		five.setOnAction(e->{
+			currentBet+= 50;
+		});
+		
+		Button one_hundred = new Button("100");
+		five.setOnAction(e->{
+			currentBet+= 100;
+		});
+		
+		border.setTop(value);
+		border.setLeft(value);
+		border.setCenter();
+		border.setRight(value);
+		
+		
+		return new Scene(box, 700, 400);
+	}
 
 	
 

@@ -41,9 +41,9 @@ public class BaccaratGame extends Application {
 	double currentBet;
 	double totalWinnings;
 	String winner; //need to pass winner info accross functions e.g. evaluateWinnings()
-	
+
 	String bet; //will either be banker, player or tie
-	
+
 	public double evaluateWinnings() {
 		//This method will determine
 		//if the user won or lost their bet
@@ -102,48 +102,49 @@ public class BaccaratGame extends Application {
 	}
 
 	//GUI STUFF
-	
-		PauseTransition pause = new PauseTransition(Duration.seconds(3));
-		HashMap<String, Scene> sceneMap; 
 
-		
+		PauseTransition pause = new PauseTransition(Duration.seconds(3));
+		HashMap<String, Scene> sceneMap;
+
+
 	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-	
+
 		primaryStage.setTitle("Let's Play Baccarat!!!");
 		Scene scene = createStartScene();
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	} //end start function
-	
+
 	public Scene createGameScene() {
-		
-		// TODO Auto-generated method stub
-		Button player = new Button("PLAYER");
-		Button banker = new Button("BANKER");
-		Button draw = new Button("DRAW");
-		TextField text = new TextField();
-		Image img = new Image("file:.../test/resources/UML.png");
-		ImageView imv = new ImageView(img);
-
-		player.setOnAction(e->text.setText("Player"));
-		banker.setOnAction(e->text.setText("banker"));
-		draw.setOnAction(e->text.setText("draw"));
-
-
 		BorderPane layout = new BorderPane();
-		layout.getChildren().addAll(player, banker, draw);
+      	VBox hands  = new VBox();
+      	HBox player_cards = new HBox();
+     	HBox banker_cards = new HBox();
+
+      	ImageView p1 = new ImageView(cardImages.get_backImage());
+      	ImageView p2 = new ImageView(cardImages.get_backImage());
+      	ImageView p3 = new ImageView(cardImages.get_backImage());
+      	ImageView b1 = new ImageView(cardImages.get_backImage());
+      	ImageView b2 = new ImageView(cardImages.get_backImage());
+      	ImageView b3 = new ImageView(cardImages.get_backImage());
+
+      	hands.getChildren().add(banker_cards);
+      	hands.getChildren().add(player_cards);
+
+      	layout.setCenter(hands);
+
 		Scene s = new Scene(layout);
 		return s;
 	}
-	
+
 	//method to create our first scene with controls
 	public Scene createStartScene() {
-		
-	
+
+
 		Image pic = new Image("file:src/test/resources/PlayButton.png");
-		
+
 		Image pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false );
 		ImageView v = new ImageView(pic);
 		ImageView v2 = new ImageView(pic2);
@@ -160,21 +161,21 @@ public class BaccaratGame extends Application {
 		VBox startBox = new VBox(playButton);
 		startBox.setPadding(new Insets(90));
 		startBox.setSpacing(20);
-		//TextField title = new TextField("stuff");	
+		//TextField title = new TextField("stuff");
 		startBox.setStyle("-fx-background-color:black;");
-		
-		
+
+
 		return new Scene(startBox,700, 400);
-		
+
 	}//end createStartScene
-	
+
 	public Scene createBettingScene() {
-		
+
 		BorderPane border = new BorderPane();
-	
+
 		//could also do ChoiceBox : how to we allow the player to only choose one of
 		//the buttons? disable buttons?
-		//HBox to choose 
+		//HBox to choose
 		HBox bet = new HBox();
 		Button player = new Button("player");
 		Button banker = new Button("banker");
@@ -182,51 +183,51 @@ public class BaccaratGame extends Application {
 		Text text = new Text("Choose Your Winner");
 		text.setFont(Font.font("Arial", FontWeight.BOLD,14) );
 		bet.getChildren().addAll(text, player, banker, tie);
-		
-		
-		//TODO: PICS/IMAGE VIEWS FOR COINTS 
+
+
+		//TODO: PICS/IMAGE VIEWS FOR COINTS
 		//Image pic = new Image("file:");
 		//ImageView v = new ImageView(pic);
 		Button one = new Button("one");
 		one.setOnAction(e->{
 			currentBet++;
 		});
-		
+
 		//one.setGraphic("one coin pic /plus??);
 		Button five = new Button("five");
 		five.setOnAction(e->{
 			currentBet+= 5;
 		});
-		
+
 		Button ten = new Button("ten");
 		five.setOnAction(e->{
 			currentBet+= 10;
 		});
-		
+
 		Button twenty_five = new Button("twenty five");
 		five.setOnAction(e->{
 			currentBet+= 25;
 		});
-		
+
 		Button fifty = new Button("50");
 		five.setOnAction(e->{
 			currentBet+= 50;
 		});
-		
+
 		Button one_hundred = new Button("100");
 		five.setOnAction(e->{
 			currentBet+= 100;
 		});
-		
+
 		border.setTop(value);
 		border.setLeft(value);
 		border.setCenter();
 		border.setRight(value);
-		
-		
+
+
 		return new Scene(box, 700, 400);
 	}
 
-	
+
 
 }

@@ -28,6 +28,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class BaccaratGame extends Application {
 	ArrayList<Card> playerHand;
 	ArrayList<Card> bankerHand;
@@ -85,7 +90,7 @@ public class BaccaratGame extends Application {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		//Image img = new Image("file:.../test/resources/UML.png");
 		//generate deck
 		//check for size (atleast six)
 			//regenerate if needed
@@ -119,6 +124,8 @@ public class BaccaratGame extends Application {
 		Button banker = new Button("BANKER");
 		Button draw = new Button("DRAW");
 		TextField text = new TextField();
+		Image img = new Image("file:.../test/resources/UML.png");
+		ImageView imv = new ImageView(img);
 
 		player.setOnAction(e->text.setText("Player"));
 		banker.setOnAction(e->text.setText("banker"));

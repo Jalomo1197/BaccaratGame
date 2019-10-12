@@ -64,6 +64,7 @@ public class ImageArrayList{
     cards.add(new Image("file:.../test/resources/JC.jpg"));
     cards.add(new Image("file:.../test/resources/QC.jpg"));
     cards.add(new Image("file:.../test/resources/KC.jpg"));
+    cards.add(new Image("file:.../test/resources/purple_back.jpg"));
   }
 
   public Image get_suit_num(Card card){
@@ -83,5 +84,11 @@ public class ImageArrayList{
 
     return cards[offSet + val];
   }
+
+
+  public Image get_backImage(){
+    return cards[52];
+  }
+
 
 }

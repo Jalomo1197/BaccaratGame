@@ -27,7 +27,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
@@ -41,6 +40,7 @@ public class BaccaratGame extends Application {
 	double currentBet;
 	double totalWinnings;
 	ImageArrayList cardImages;
+	Button playButton;
 	String winner; //need to pass winner info accross functions e.g. evaluateWinnings()
 
 	String bet; //will either be banker, player or tie
@@ -111,6 +111,19 @@ public class BaccaratGame extends Application {
 	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		BorderPane mainLayout = new BorderPane();
+		mainLayout.setCenter(startLayout());
+		playButton.setOnAction(e->{
+			playButton.setGraphic(v2);
+			pause.play();
+			mainLayout.setCenter(betLayout());
+			mainLayout.setBottom(infoLayout());
+		});
+		//figure out button listener and button to start the dealing of card
+			//e->{mainLayout.setCenter(gameLayout());} when clicked
+		//
+
+
 		cardImages = new ImageArrayList();
 		primaryStage.setTitle("Let's Play Baccarat!!!");
 		Scene scene = createGameScene();
@@ -118,8 +131,7 @@ public class BaccaratGame extends Application {
 		primaryStage.show();
 	} //end start function
 
-	public Scene createGameScene() {
-		BorderPane layout = new BorderPane();
+	public VBox gameLayout() {
     VBox hands  = new VBox();
     HBox player_cards = new HBox();
     HBox banker_cards = new HBox();
@@ -133,17 +145,13 @@ public class BaccaratGame extends Application {
 
 		player_cards.getChildren().addAll(p1,p2,p3);
 		banker_cards.getChildren().addAll(b1,b2,b3);
-
   	hands.getChildren().addAll(banker_cards,player_cards);
-
-  	layout.setCenter(hands);
-
-		Scene s = new Scene(layout);
-		return s;
+		
+		return hands;
 	}
 
 	//method to create our first scene with controls
-	public Scene createStartScene() {
+	public VBox startLayout() {
 
 
 		Image pic = new Image("file:src/test/resources/PlayButton.png");
@@ -155,7 +163,7 @@ public class BaccaratGame extends Application {
 		//v.setFitHeight(146);
 		//v.setFitWidth(470);
 		//v.setPreserveRatio(true);
-		Button playButton = new Button();
+		playButton = new Button();
 		//playButton.setOnAction(returnButtons);
 		playButton.setGraphic(v);
 		playButton.setStyle("-fx-background-color:black;");
@@ -168,7 +176,7 @@ public class BaccaratGame extends Application {
 		startBox.setStyle("-fx-background-color:black;");
 
 
-		return new Scene(startBox,700, 400);
+		return startBox;
 
 	}//end createStartScene
 /*

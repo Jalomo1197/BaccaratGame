@@ -40,6 +40,7 @@ public class BaccaratGame extends Application {
 	BaccaratGameLogic gameLogic;
 	double currentBet;
 	double totalWinnings;
+	ImageArrayList cardImages;
 	String winner; //need to pass winner info accross functions e.g. evaluateWinnings()
 
 	String bet; //will either be banker, player or tie
@@ -110,30 +111,32 @@ public class BaccaratGame extends Application {
 	//feel free to remove the starter code from this method
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
+		cardImages = new ImageArrayList();
 		primaryStage.setTitle("Let's Play Baccarat!!!");
-		Scene scene = createStartScene();
+		Scene scene = createGameScene();
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	} //end start function
 
 	public Scene createGameScene() {
 		BorderPane layout = new BorderPane();
-      	VBox hands  = new VBox();
-      	HBox player_cards = new HBox();
-     	HBox banker_cards = new HBox();
+    VBox hands  = new VBox();
+    HBox player_cards = new HBox();
+    HBox banker_cards = new HBox();
 
-      	ImageView p1 = new ImageView(cardImages.get_backImage());
-      	ImageView p2 = new ImageView(cardImages.get_backImage());
-      	ImageView p3 = new ImageView(cardImages.get_backImage());
-      	ImageView b1 = new ImageView(cardImages.get_backImage());
-      	ImageView b2 = new ImageView(cardImages.get_backImage());
-      	ImageView b3 = new ImageView(cardImages.get_backImage());
+  	ImageView p1 = new ImageView(cardImages.get_backImage());
+  	ImageView p2 = new ImageView(cardImages.get_backImage());
+  	ImageView p3 = new ImageView(cardImages.get_backImage());
+  	ImageView b1 = new ImageView(cardImages.get_backImage());
+  	ImageView b2 = new ImageView(cardImages.get_backImage());
+  	ImageView b3 = new ImageView(cardImages.get_backImage());
 
-      	hands.getChildren().add(banker_cards);
-      	hands.getChildren().add(player_cards);
+		player_cards.getChildren().addAll(p1,p2,p3);
+		banker_cards.getChildren().addAll(b1,b2,b3);
 
-      	layout.setCenter(hands);
+  	hands.getChildren().addAll(banker_cards,player_cards);
+
+  	layout.setCenter(hands);
 
 		Scene s = new Scene(layout);
 		return s;
@@ -168,7 +171,7 @@ public class BaccaratGame extends Application {
 		return new Scene(startBox,700, 400);
 
 	}//end createStartScene
-
+/*
 	public Scene createBettingScene() {
 
 		BorderPane border = new BorderPane();
@@ -228,6 +231,6 @@ public class BaccaratGame extends Application {
 		return new Scene(box, 700, 400);
 	}
 
-
+*/
 
 }

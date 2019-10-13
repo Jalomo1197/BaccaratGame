@@ -1,4 +1,4 @@
-
+import java.awt.Color; 
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +7,8 @@ import java.util.function.Function;
 import java.io.FileInputStream;
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +16,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -37,13 +41,28 @@ public class BaccaratGame extends Application {
 	ArrayList<Card> bankerHand;
 	BaccaratDealer theDealer;
 	BaccaratGameLogic gameLogic;
-	double currentBet;
-	double totalWinnings;
+	double currentBet = 0;
+	double totalWinnings = 0;
 	ImageArrayList cardImages;
 	Button playButton;
 	String winner; //need to pass winner info accross functions e.g. evaluateWinnings()
+	String bettingOn; //will either be banker, player or tie
 
-	String bet; //will either be banker, player or tie
+  	//GUI STUFF
+    PauseTransition pause = new PauseTransition(Duration.seconds(3));
+    HashMap<String, Scene> sceneMap;
+    Image pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false );
+    ImageView v2 = new ImageView(pic2);
+    Label l1;
+    Text Money, betAmount, betChoice, playerScore, bankerScore;
+    String s[] = {"Player", "Banker", "Draw"};
+    TextField value;
+    Button confirm;
+    Button resetCurrentBet;
+    ChoiceBox<String> c;
+  	ImageView p1, p2, p3, b1, b2, b3;
+
+
 
 	public double evaluateWinnings() {
 		//This method will determine
@@ -97,68 +116,128 @@ public class BaccaratGame extends Application {
 			//regenerate if needed
 		//deal hands
 		//call evaluateWinnings
-
-
 		launch(args);
 	}
 
-	//GUI STUFF
 
-		PauseTransition pause = new PauseTransition(Duration.seconds(3));
-		HashMap<String, Scene> sceneMap;
-
-
-	//feel free to remove the starter code from this method
+	//START METHOD
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		BorderPane mainLayout = new BorderPane();
+		cardImages = new ImageArrayList();
+		confirm = new Button("Confirm");
+		resetCurrentBet = new Button("Reset Bet");
+		value = new TextField();
+		c = new ChoiceBox<String>(FXCollections.observableArrayList("Player", "Banker", "Tie"));
+      	theDealer = new BaccaratDealer();
 		mainLayout.setCenter(startLayout());
+
+		//PLAY BUTTON EVENT HANDLER
 		playButton.setOnAction(e->{
 			playButton.setGraphic(v2);
 			pause.play();
 			mainLayout.setCenter(betLayout());
 			mainLayout.setBottom(infoLayout());
+          	theDealer.generateDeck();
+          	theDealer.shuffleDeck();
 		});
-		//figure out button listener and button to start the dealing of card
-			//e->{mainLayout.setCenter(gameLayout());} when clicked
-		//
+
+        confirm.setOnAction(e->{
+        	mainLayout.setCenter(gameLayout());
+          	if (!theDealer.EnoughtCard()){
+            	theDealer.generateDeck();
+          		theDealer.shuffleDeck();
+            }
+          	playerHand = theDealer.dealHand();
+          	bankerHand = theDealer.dealHand();
 
 
-		cardImages = new ImageArrayList();
-		primaryStage.setTitle("Let's Play Baccarat!!!");
-		Scene scene = createGameScene();
-		primaryStage.setScene(scene);
-		primaryStage.show();
+          //TESTING
+          System.out.println("p1 worth:"+ playerHand.get(0).getWorth());
+          System.out.println("p1 value:"+ playerHand.get(0).getValue() + playerHand.get(0).getSuit());
+          System.out.println("p2 worth:"+ playerHand.get(1).getWorth());
+          System.out.println("p2 value:"+ playerHand.get(1).getValue() + playerHand.get(1).getSuit());
+
+          System.out.println("\nb1 worth:"+ bankerHand.get(0).getWorth());
+          System.out.println("b1 value:"+ bankerHand.get(0).getValue() + bankerHand.get(0).getSuit());
+          System.out.println("b2 worth:"+ bankerHand.get(1).getWorth());
+          System.out.println("b2 value:"+ bankerHand.get(1).getValue() + bankerHand.get(1).getSuit());
+          //^TESTING
+          p1.setImage(cardImages.get_suit_num(playerHand.get(0)));
+          b1.setImage(cardImages.get_suit_num(bankerHand.get(0)));
+          b2.setImage(cardImages.get_suit_num(bankerHand.get(1)));
+          p2.setImage(cardImages.get_suit_num(playerHand.get(1)));
+          //SetScores();
+        });
+
+
+
+		resetCurrentBet.setOnAction(e->{
+          currentBet=0;
+          value.clear();
+		});
+
+		//CHOICE BOX LISTENER FOR CHOOSING WHO YOU ARE BETTING ON
+		c.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+      	// if the item of the list is changed
+		@Override
+		public void changed(ObservableValue ov, Number value, Number new_value)
+		{
+		    // set the text for the label to the selected item
+		    l1.setText(s[new_value.intValue()] + " selected");
+		    bettingOn = s[new_value.intValue()];
+          	betChoice.setText(bettingOn);
+		}
+		});
+
+	//using lambda for EventHandler: press enter adds info from text field to queue
+      value.setOnKeyPressed(e ->{
+      	if(e.getCode().equals(KeyCode.ENTER)){
+      		currentBet = Integer.parseInt(value.getText());
+      }});
+
+
+      primaryStage.setTitle("Let's Play Baccarat!!!");
+      Scene scene = new Scene(mainLayout);
+      primaryStage.setScene(scene);
+      primaryStage.show();
 	} //end start function
 
-	public VBox gameLayout() {
-    VBox hands  = new VBox();
-    HBox player_cards = new HBox();
-    HBox banker_cards = new HBox();
 
-  	ImageView p1 = new ImageView(cardImages.get_backImage());
-  	ImageView p2 = new ImageView(cardImages.get_backImage());
-  	ImageView p3 = new ImageView(cardImages.get_backImage());
-  	ImageView b1 = new ImageView(cardImages.get_backImage());
-  	ImageView b2 = new ImageView(cardImages.get_backImage());
-  	ImageView b3 = new ImageView(cardImages.get_backImage());
+    public void SetScores(){
+        bankerScore.setText("Score: " + gameLogic.handTotal(bankerHand));
+        playerScore.setText("Score: " + gameLogic.handTotal(playerHand));
+    }
 
-		player_cards.getChildren().addAll(p1,p2,p3);
-		banker_cards.getChildren().addAll(b1,b2,b3);
-  	hands.getChildren().addAll(banker_cards,player_cards);
-		
-		return hands;
-	}
+
+    public VBox gameLayout() {
+      VBox hands  = new VBox();
+      HBox player_cards = new HBox();
+      HBox banker_cards = new HBox();
+
+      Text PlayerLabel = new Text("Players Hand     ");
+      Text BankerLabel = new Text("Bankers Hand     ");
+	  playerScore = new Text("Score: 0");
+      bankerScore = new Text("Score: 0");
+      p1 = new ImageView(cardImages.get_backImage());
+      p2 = new ImageView(cardImages.get_backImage());
+      p3 = new ImageView(cardImages.get_backImage());
+      b1 = new ImageView(cardImages.get_backImage());
+      b2 = new ImageView(cardImages.get_backImage());
+      b3 = new ImageView(cardImages.get_backImage());
+
+      player_cards.getChildren().addAll(PlayerLabel,p1,p2,p3,playerScore);
+      banker_cards.getChildren().addAll(BankerLabel,b1,b2,b3,bankerScore);
+      hands.getChildren().addAll(banker_cards,player_cards);
+      return hands;
+    }//end of gameLayout
+
 
 	//method to create our first scene with controls
 	public VBox startLayout() {
-
-
 		Image pic = new Image("file:src/test/resources/PlayButton.png");
-
-		Image pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false );
 		ImageView v = new ImageView(pic);
-		ImageView v2 = new ImageView(pic2);
 		//v.setCache(true);
 		//v.setFitHeight(146);
 		//v.setFitWidth(470);
@@ -167,78 +246,59 @@ public class BaccaratGame extends Application {
 		//playButton.setOnAction(returnButtons);
 		playButton.setGraphic(v);
 		playButton.setStyle("-fx-background-color:black;");
-		playButton.setOnAction(e->playButton.setGraphic(v2));
-
 		VBox startBox = new VBox(playButton);
 		startBox.setPadding(new Insets(90));
 		startBox.setSpacing(20);
 		//TextField title = new TextField("stuff");
 		startBox.setStyle("-fx-background-color:black;");
-
-
 		return startBox;
-
 	}//end createStartScene
-/*
-	public Scene createBettingScene() {
 
-		BorderPane border = new BorderPane();
 
+	public VBox betLayout() {
 		//could also do ChoiceBox : how to we allow the player to only choose one of
 		//the buttons? disable buttons?
 		//HBox to choose
-		HBox bet = new HBox();
-		Button player = new Button("player");
-		Button banker = new Button("banker");
-		Button tie = new Button("tie");
-		Text text = new Text("Choose Your Winner");
-		text.setFont(Font.font("Arial", FontWeight.BOLD,14) );
-		bet.getChildren().addAll(text, player, banker, tie);
+		HBox chooseBet = new HBox();
+		//this HBOX will eventually contain coins that you can choose with
+		l1 = new Label("Choose who you are betting on!");
+		value.setPromptText("Enter an amount to bid");
+		chooseBet.getChildren().addAll(value, resetCurrentBet);
+		VBox main = new VBox(chooseBet, c, confirm);
+		return main;
+	}//end betLayout
 
 
-		//TODO: PICS/IMAGE VIEWS FOR COINTS
-		//Image pic = new Image("file:");
-		//ImageView v = new ImageView(pic);
-		Button one = new Button("one");
-		one.setOnAction(e->{
-			currentBet++;
-		});
+	public HBox infoLayout(){
+		HBox information = new HBox();
+		information.setStyle("-fx-background-color: #000000");
+		information.setSpacing(20);
 
-		//one.setGraphic("one coin pic /plus??);
-		Button five = new Button("five");
-		five.setOnAction(e->{
-			currentBet+= 5;
-		});
+		Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 20);
+		Text moneyInfo = new Text("Current Balance:");
+		moneyInfo.setFont(redFont);
+		moneyInfo.setFill(Color.ANTIQUEWHITE);
+		Text betAmountInfo = new Text("Current Bet Amount:");
+		betAmountInfo.setFont(redFont);
+		betAmountInfo.setFill(Color.ANTIQUEWHITE);
+		Text betChoiceInfo = new Text("Betting on the ");
+		betChoiceInfo.setFont(redFont);
+		betChoiceInfo.setFill(Color.ANTIQUEWHITE);
+		Money = new Text("$ " + totalWinnings);
+		Money.setFont(redFont);
+		Money.setFill(Color.ORANGERED);
+		betAmount = new Text("$ "+ currentBet);
+		betAmount.setFont(redFont);
+		betAmount.setFill(Color.ORANGERED);
+		betChoice = new Text();
+		betChoice.setFont(redFont);
+		betChoice.setFill(Color.ORANGERED);
+		VBox moneyBox = new VBox(moneyInfo, Money);
+		VBox betBox = new VBox(betAmountInfo, betAmount);
+		VBox choice = new VBox(betChoiceInfo, betChoice);
+		information.getChildren().addAll(moneyBox, betBox, choice);
+		return information;
+	}//end infoLayout
 
-		Button ten = new Button("ten");
-		five.setOnAction(e->{
-			currentBet+= 10;
-		});
-
-		Button twenty_five = new Button("twenty five");
-		five.setOnAction(e->{
-			currentBet+= 25;
-		});
-
-		Button fifty = new Button("50");
-		five.setOnAction(e->{
-			currentBet+= 50;
-		});
-
-		Button one_hundred = new Button("100");
-		five.setOnAction(e->{
-			currentBet+= 100;
-		});
-
-		border.setTop(value);
-		border.setLeft(value);
-		border.setCenter();
-		border.setRight(value);
-
-
-		return new Scene(box, 700, 400);
-	}
-
-*/
 
 }

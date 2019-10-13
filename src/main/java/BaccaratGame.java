@@ -1,4 +1,4 @@
-import java.awt.Color; 
+import javafx.scene.paint.Color;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +35,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.IOException;
+//import javafx.stage.StageStyle;
 
 public class BaccaratGame extends Application {
 	ArrayList<Card> playerHand;
@@ -61,6 +62,7 @@ public class BaccaratGame extends Application {
     Button resetCurrentBet;
     ChoiceBox<String> c;
   	ImageView p1, p2, p3, b1, b2, b3;
+		Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 20);
 
 
 
@@ -123,13 +125,14 @@ public class BaccaratGame extends Application {
 	//START METHOD
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		//primaryStage.initStyle(StageStyle.UNDECORATED);
 		BorderPane mainLayout = new BorderPane();
 		cardImages = new ImageArrayList();
 		confirm = new Button("Confirm");
 		resetCurrentBet = new Button("Reset Bet");
 		value = new TextField();
 		c = new ChoiceBox<String>(FXCollections.observableArrayList("Player", "Banker", "Tie"));
-      	theDealer = new BaccaratDealer();
+    theDealer = new BaccaratDealer();
 		mainLayout.setCenter(startLayout());
 
 		//PLAY BUTTON EVENT HANDLER
@@ -152,7 +155,7 @@ public class BaccaratGame extends Application {
           	bankerHand = theDealer.dealHand();
 
 
-          //TESTING
+          /*TESTING
           System.out.println("p1 worth:"+ playerHand.get(0).getWorth());
           System.out.println("p1 value:"+ playerHand.get(0).getValue() + playerHand.get(0).getSuit());
           System.out.println("p2 worth:"+ playerHand.get(1).getWorth());
@@ -162,7 +165,7 @@ public class BaccaratGame extends Application {
           System.out.println("b1 value:"+ bankerHand.get(0).getValue() + bankerHand.get(0).getSuit());
           System.out.println("b2 worth:"+ bankerHand.get(1).getWorth());
           System.out.println("b2 value:"+ bankerHand.get(1).getValue() + bankerHand.get(1).getSuit());
-          //^TESTING
+          *///^TESTING
           p1.setImage(cardImages.get_suit_num(playerHand.get(0)));
           b1.setImage(cardImages.get_suit_num(bankerHand.get(0)));
           b2.setImage(cardImages.get_suit_num(bankerHand.get(1)));
@@ -218,7 +221,7 @@ public class BaccaratGame extends Application {
 
       Text PlayerLabel = new Text("Players Hand     ");
       Text BankerLabel = new Text("Bankers Hand     ");
-	  playerScore = new Text("Score: 0");
+	    playerScore = new Text("Score: 0");
       bankerScore = new Text("Score: 0");
       p1 = new ImageView(cardImages.get_backImage());
       p2 = new ImageView(cardImages.get_backImage());
@@ -264,6 +267,11 @@ public class BaccaratGame extends Application {
 		l1 = new Label("Choose who you are betting on!");
 		value.setPromptText("Enter an amount to bid");
 		chooseBet.getChildren().addAll(value, resetCurrentBet);
+		resetCurrentBet.setStyle("-fx-background-color: #DAADA3; -fx-border-style: none; -fx-text-fill: #AD1F00; -fx-padding: 8;");
+		resetCurrentBet.setFont(redFont);
+		confirm.setStyle("-fx-background-color: #DAADA3; -fx-border-style: none; -fx-text-fill: #AD1F00; -fx-padding: 8;");
+		confirm.setFont(redFont);
+		//confirm.setAlignment(CENTER); WRONG
 		VBox main = new VBox(chooseBet, c, confirm);
 		return main;
 	}//end betLayout
@@ -274,7 +282,6 @@ public class BaccaratGame extends Application {
 		information.setStyle("-fx-background-color: #000000");
 		information.setSpacing(20);
 
-		Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 20);
 		Text moneyInfo = new Text("Current Balance:");
 		moneyInfo.setFont(redFont);
 		moneyInfo.setFill(Color.ANTIQUEWHITE);

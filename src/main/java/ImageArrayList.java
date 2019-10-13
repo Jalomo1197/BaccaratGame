@@ -12,7 +12,7 @@ public class ImageArrayList{
   ImageArrayList(){
     cards = new ArrayList<Image>();
     //SPADES, HEARTS, DIAMONDS, CLUBS
-    cards.add(new Image("file:src/test/resources/AS.jpg", 100, 175, false, false));
+    cards.add(new Image("file:src/test/resources/AS.jpg", 100, 175, false, false));//0
     cards.add(new Image("file:src/test/resources/2S.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/3S.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/4S.jpg", 100, 175, false, false));
@@ -24,8 +24,9 @@ public class ImageArrayList{
     cards.add(new Image("file:src/test/resources/10S.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/JS.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/QS.jpg", 100, 175, false, false));
-    cards.add(new Image("file:src/test/resources/KS.jpg", 100, 175, false, false));
-    cards.add(new Image("file:src/test/resources/AH.jpg", 100, 175, false, false));
+    cards.add(new Image("file:src/test/resources/KS.jpg", 100, 175, false, false));//12
+
+    cards.add(new Image("file:src/test/resources/AH.jpg", 100, 175, false, false));//13
     cards.add(new Image("file:src/test/resources/2H.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/3H.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/4H.jpg", 100, 175, false, false));
@@ -37,8 +38,9 @@ public class ImageArrayList{
     cards.add(new Image("file:src/test/resources/10H.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/JH.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/QH.jpg", 100, 175, false, false));
-    cards.add(new Image("file:src/test/resources/KH.jpg", 100, 175, false, false));
-    cards.add(new Image("file:src/test/resources/AD.jpg", 100, 175, false, false));
+    cards.add(new Image("file:src/test/resources/KH.jpg", 100, 175, false, false));//25
+
+    cards.add(new Image("file:src/test/resources/AD.jpg", 100, 175, false, false));//26
     cards.add(new Image("file:src/test/resources/2D.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/3D.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/4D.jpg", 100, 175, false, false));
@@ -50,8 +52,9 @@ public class ImageArrayList{
     cards.add(new Image("file:src/test/resources/10D.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/JD.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/QD.jpg", 100, 175, false, false));
-    cards.add(new Image("file:src/test/resources/KD.jpg", 100, 175, false, false));
-    cards.add(new Image("file:src/test/resources/AC.jpg", 100, 175, false, false));
+    cards.add(new Image("file:src/test/resources/KD.jpg", 100, 175, false, false));//39
+
+    cards.add(new Image("file:src/test/resources/AC.jpg", 100, 175, false, false));//39
     cards.add(new Image("file:src/test/resources/2C.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/3C.jpg", 100, 175, false, false));
     cards.add(new Image("file:src/test/resources/4C.jpg", 100, 175, false, false));
@@ -71,21 +74,14 @@ public class ImageArrayList{
     String suit = card.getSuit();
     int val = card.getValue() - 1;
     int offSet = 0;
-    switch(suit){
-      case "Spades":
+    if (suit == "Spades")
         offSet = 0;
-        break;
-      case "Hearts":
-        offSet = 14;
-        break;
-      case "Diamonds":
-        offSet = 27;
-        break;
-      case "Clubs":
-        offSet = 40;
-        break;
-    }
-
+    if (suit == "Hearts")
+        offSet = 13;
+    if (suit == "Diamonds")
+        offSet = 26;
+    if (suit == "Clubs")
+        offSet = 49;
     return cards.get(offSet + val);
   }
 

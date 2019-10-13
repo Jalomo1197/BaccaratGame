@@ -74,12 +74,16 @@ public class ImageArrayList{
     switch(suit){
       case "Spades":
         offSet = 0;
+        break;
       case "Hearts":
         offSet = 14;
+        break;
       case "Diamonds":
         offSet = 27;
+        break;
       case "Clubs":
         offSet = 40;
+        break;
     }
 
     return cards.get(offSet + val);

@@ -51,7 +51,7 @@ public class BaccaratGame extends Application {
 	String bettingOn; //will either be banker, player or tie
 
   	//GUI STUFF
-    PauseTransition pause = new PauseTransition(Duration.seconds(3));
+    PauseTransition pause;
     HashMap<String, Scene> sceneMap;
     Image pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false );
     ImageView v2 = new ImageView(pic2);
@@ -66,6 +66,7 @@ public class BaccaratGame extends Application {
 		Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 20);
 		HBox player_cards;
 		HBox banker_cards;
+		BorderPane mainLayout;
 
 
 
@@ -129,14 +130,17 @@ public class BaccaratGame extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		//primaryStage.initStyle(StageStyle.UNDECORATED);
-		BorderPane mainLayout = new BorderPane();
+		pause = new PauseTransition(Duration.seconds(3));
+		mainLayout = new BorderPane();
 		cardImages = new ImageArrayList();
 		confirm = new Button("Confirm");
 		resetCurrentBet = new Button("Reset Bet");
 		value = new TextField();
 		c = new ChoiceBox<String>(FXCollections.observableArrayList("Player", "Banker", "Tie"));
     theDealer = new BaccaratDealer();
+		gameLogic = new BaccaratGameLogic();
 		mainLayout.setCenter(startLayout());
+
 
 		//PLAY BUTTON EVENT HANDLER
 		playButton.setOnAction(e->{
@@ -144,39 +148,43 @@ public class BaccaratGame extends Application {
 			pause.play();
 			mainLayout.setCenter(betLayout());
 			mainLayout.setBottom(infoLayout());
-			//mainLayout.setAlignment(player_cards, Pos.CENTER);
-			//mainLayout.setAlignment(banker_cards, Pos.CENTER);
     	theDealer.generateDeck();
     	theDealer.shuffleDeck();
 		});
 
-        confirm.setOnAction(e->{
-        	mainLayout.setCenter(gameLayout());
-          	if (!theDealer.EnoughtCard()){
-            	theDealer.generateDeck();
-          		theDealer.shuffleDeck();
-            }
-          	playerHand = theDealer.dealHand();
-          	bankerHand = theDealer.dealHand();
+    confirm.setOnAction(e->{
+    	  mainLayout.setCenter(gameLayout());
+      	if (!theDealer.EnoughtCard()){
+        	theDealer.generateDeck();
+      		theDealer.shuffleDeck();
+        }
+      	playerHand = theDealer.dealHand();
+      	bankerHand = theDealer.dealHand();
+				pause.play();
+	      p1.setImage(cardImages.get_suit_num(playerHand.get(0)));
+				pause.play();
+	      b1.setImage(cardImages.get_suit_num(bankerHand.get(0)));
+				pause.play();
+	      b2.setImage(cardImages.get_suit_num(bankerHand.get(1)));
+				pause.play();
+	      p2.setImage(cardImages.get_suit_num(playerHand.get(1)));
+				pause.play();
+    		SetScores();
 
+				//at this point hands got third card is needed.
+				double CurrentWin = evaluateWinnings();
 
-          /*TESTING
-          System.out.println("p1 worth:"+ playerHand.get(0).getWorth());
-          System.out.println("p1 value:"+ playerHand.get(0).getValue() + playerHand.get(0).getSuit());
-          System.out.println("p2 worth:"+ playerHand.get(1).getWorth());
-          System.out.println("p2 value:"+ playerHand.get(1).getValue() + playerHand.get(1).getSuit());
+				if(playerHand.size() == 3){
+					p3.setImage(cardImages.get_suit_num(playerHand.get(2)));
+					pause.play();
+				}
+				if(bankerHand.size() == 3){
+					b3.setImage(cardImages.get_suit_num(bankerHand.get(2)));
+					pause.play();
+				}
+				SetScores();
 
-          System.out.println("\nb1 worth:"+ bankerHand.get(0).getWorth());
-          System.out.println("b1 value:"+ bankerHand.get(0).getValue() + bankerHand.get(0).getSuit());
-          System.out.println("b2 worth:"+ bankerHand.get(1).getWorth());
-          System.out.println("b2 value:"+ bankerHand.get(1).getValue() + bankerHand.get(1).getSuit());
-          *///^TESTING
-          p1.setImage(cardImages.get_suit_num(playerHand.get(0)));
-          b1.setImage(cardImages.get_suit_num(bankerHand.get(0)));
-          b2.setImage(cardImages.get_suit_num(bankerHand.get(1)));
-          p2.setImage(cardImages.get_suit_num(playerHand.get(1)));
-          //SetScores();
-        });
+    });
 
 
 

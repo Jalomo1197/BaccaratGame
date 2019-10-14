@@ -35,6 +35,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.IOException;
+import javafx.geometry.Pos;
 //import javafx.stage.StageStyle;
 
 public class BaccaratGame extends Application {
@@ -63,6 +64,8 @@ public class BaccaratGame extends Application {
     ChoiceBox<String> c;
   	ImageView p1, p2, p3, b1, b2, b3;
 		Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 20);
+		HBox player_cards;
+		HBox banker_cards;
 
 
 
@@ -141,8 +144,10 @@ public class BaccaratGame extends Application {
 			pause.play();
 			mainLayout.setCenter(betLayout());
 			mainLayout.setBottom(infoLayout());
-          	theDealer.generateDeck();
-          	theDealer.shuffleDeck();
+			//mainLayout.setAlignment(player_cards, Pos.CENTER);
+			//mainLayout.setAlignment(banker_cards, Pos.CENTER);
+    	theDealer.generateDeck();
+    	theDealer.shuffleDeck();
 		});
 
         confirm.setOnAction(e->{
@@ -216,14 +221,19 @@ public class BaccaratGame extends Application {
 
     public VBox gameLayout() {
       VBox hands  = new VBox();
-      HBox player_cards = new HBox();
-      HBox banker_cards = new HBox();
+      player_cards = new HBox();
+      banker_cards = new HBox();
 
       Text PlayerLabel = new Text("Players Hand     ");
+			PlayerLabel.setFont(redFont);
       Text BankerLabel = new Text("Bankers Hand     ");
+			BankerLabel.setFont(redFont);
 	    playerScore = new Text("Score: 0");
       bankerScore = new Text("Score: 0");
+			playerScore.setFont(redFont);
+			bankerScore.setFont(redFont);
       p1 = new ImageView(cardImages.get_backImage());
+
       p2 = new ImageView(cardImages.get_backImage());
       p3 = new ImageView(cardImages.get_backImage());
       b1 = new ImageView(cardImages.get_backImage());
@@ -233,6 +243,7 @@ public class BaccaratGame extends Application {
       player_cards.getChildren().addAll(PlayerLabel,p1,p2,p3,playerScore);
       banker_cards.getChildren().addAll(BankerLabel,b1,b2,b3,bankerScore);
       hands.getChildren().addAll(banker_cards,player_cards);
+
       return hands;
     }//end of gameLayout
 
@@ -271,7 +282,7 @@ public class BaccaratGame extends Application {
 		resetCurrentBet.setFont(redFont);
 		confirm.setStyle("-fx-background-color: #DAADA3; -fx-border-style: none; -fx-text-fill: #AD1F00; -fx-padding: 8;");
 		confirm.setFont(redFont);
-		//confirm.setAlignment(CENTER); WRONG
+
 		VBox main = new VBox(chooseBet, c, confirm);
 		return main;
 	}//end betLayout

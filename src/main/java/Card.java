@@ -1,14 +1,14 @@
 
 public class Card {
 	private String suit; //Spades, hearts, diamonds, clubs
-	
-						//ENUMERATED SUITS: 
+
+						//ENUMERATED SUITS:
 						//SPADES = 0
 						//HEARTS = 1
 						//DIAMONDS =2
 						//CLUBS = 3
-						
-	
+
+
 	private int value; //from 1-13
 
 	//CONSTRUCTOR:
@@ -16,9 +16,9 @@ public class Card {
 		this.suit = theSuit;
 		this.value = theValue;
 	}//end Constructor
-	
+
 	//card overload constructor with suit as int value
-	//for easy initialization 
+	//for easy initialization
 	Card(int suit, int theValue){
 		if (suit == 0) {
 			this.suit = "Spades";
@@ -33,13 +33,13 @@ public class Card {
 			this.suit = "Clubs";
 		}
 		this.value = theValue;
-		
+
 	}//end Constructor
-	
+
 	public int getValue() {
 		return value;
 	}//end getValue
-	
+
 	public int getWorth() {
 		//if the card is a 10 or face card it's worth zero points
 		if (value >= 10 ) {
@@ -48,12 +48,12 @@ public class Card {
 		//if the card is an ace it's worth 1 point
 		else return value;
 	} //end getWorth
-	
-	
+
+
 	public String getSuit() {
 		return suit;
-	} 
-	
+	}
+
 	public String getValueAsString() {
 		switch(value) {
 		case 1:  return "Ace";
@@ -70,8 +70,8 @@ public class Card {
 		case 12: return "Queen";
 		case 13: return "King";
 		default: return "Not a card";
-		
+
 		}
 	}
-	
+
 }

@@ -34,17 +34,22 @@ public class BaccaratGameLogic {
 	public int handTotal(ArrayList<Card> hand) {
 		//take a hand and return how many points that hand is worth.
 		//iterate through hand ArrayList
-		int handTotal = 0;
-		for(Card c: hand)
-			handTotal += c.getWorth();
+		if (hand == null){
+			System.out.println("NO OBJECT PASSED TO HANDTOTAL FUNCTION");
+			return -1;
+		}
 
+		int handTotal = 0;
+		for(Card c: hand){
+			handTotal += c.getWorth();
+		}
 		if (handTotal > 9)
 				handTotal %= 10;
 
 		return handTotal;
 	}
 
-	
+
 	public boolean evaluateBankerDraw(ArrayList<Card> hand, Card playerCard) {
 		//return true if Banker should be dealt a third card, otherwise return false.
 		int total = handTotal(hand);

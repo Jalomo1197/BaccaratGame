@@ -152,7 +152,16 @@ public class BaccaratGame extends Application {
 		mainLayout.setStyle("-fx-background-color: #267617;");
 
 
+		EventHandler<ActionEvent> callSetScores = new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent action) {
+				SetScores();
+				System.out.println("	HERE	");
+			}
+		};
 
+		Timeline finalScores = new Timeline(
+	    new KeyFrame(Duration.seconds(9700),"L", callSetScores)
+		);
 
 
 
@@ -214,7 +223,7 @@ public class BaccaratGame extends Application {
 				KeyFrame PScore2 = new KeyFrame(Duration.millis(3700), showplayerScore);
 				KeyFrame BScore1 = new KeyFrame(Duration.millis(4400), showb1Score);
 				KeyFrame BScore2 = new KeyFrame(Duration.millis(5100), showbankerScore);
-	
+
 				Timeline updateScores = new Timeline();
 				showWinner = new Timeline(); //play after winner is assigned
 				Timeline dealCards = new Timeline();
@@ -224,11 +233,16 @@ public class BaccaratGame extends Application {
 				dealCards.getKeyFrames().addAll(d1,d2,d3,d4,s1,s2,s3,s4);
 				dealCards.play();
 				updateScores.play();
-
+				finalScores.play();
 
 				//at this point hands got third card is needed.
 				totalWinnings += evaluateWinnings();
 
+/*
+				Timeline finalScores = new Timeline(
+						new KeyFrame(Duration.seconds(9700), "l", callSetScores)
+				);*/
+/*
 				KeyValue finalPScore = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(playerHand));
 				KeyValue finalBScore = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(bankerHand));
 				KeyFrame PScore3 = new KeyFrame(Duration.millis(7700), finalPScore);
@@ -236,7 +250,7 @@ public class BaccaratGame extends Application {
 				Timeline FinalScores = new Timeline();
 				FinalScores.getKeyFrames().addAll(PScore3,  BScore3);
 				FinalScores.play();
-
+*/
 				KeyValue showW = new KeyValue(W.textProperty(), "		WINNER:				\n   "+ winner );
 				KeyFrame sW  = new KeyFrame(Duration.millis(10000), showW);
 				showWinner.getKeyFrames().add(sW);

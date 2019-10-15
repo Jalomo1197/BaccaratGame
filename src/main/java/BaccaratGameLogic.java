@@ -64,6 +64,8 @@ public class BaccaratGameLogic {
 		//else we know that it depends on the value of the player card, if any.
 		if (playerCard == null && total != 6)
 			return true;
+		if (playerCard == null && total == 6)
+			return false;
 
 		playerVal = playerCard.getWorth();
 		if (total == 3 && playerVal != 8)

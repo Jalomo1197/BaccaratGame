@@ -27,7 +27,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+//ANIMATION__TIMELINES__
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.util.Duration;
+//***
 import javafx.scene.image.*;
 import java.io.IOException;
 import javafx.geometry.Pos;
@@ -146,6 +151,10 @@ public class BaccaratGame extends Application {
 		mainLayout.setStyle("-fx-background-color: #267617;");
 
 
+
+
+
+
 		//PLAY BUTTON EVENT HANDLER
 		playButton.setOnAction(e->{
 			playButton.setGraphic(v2);
@@ -171,35 +180,58 @@ public class BaccaratGame extends Application {
         }
       	playerHand = theDealer.dealHand();
       	bankerHand = theDealer.dealHand();
-				pause.play();
-	      p1.setImage(cardImages.get_suit_num(playerHand.get(0)));
-				pause.play();
-	      b1.setImage(cardImages.get_suit_num(bankerHand.get(0)));
-				pause.play();
-	      b2.setImage(cardImages.get_suit_num(bankerHand.get(1)));
-				pause.play();
-	      p2.setImage(cardImages.get_suit_num(playerHand.get(1)));
-				pause.play();
-    		SetScores();
+
+				//ANIMATION__TIMELINES__****************************************************
+				KeyValue deal1 = new KeyValue(p1.imageProperty(),cardImages.get_backImage());
+				KeyValue deal2 = new KeyValue(p2.imageProperty(),cardImages.get_backImage());
+				KeyValue deal3 = new KeyValue(b1.imageProperty(),cardImages.get_backImage());
+				KeyValue deal4 = new KeyValue(b2.imageProperty(),cardImages.get_backImage());
+				KeyValue show1 = new KeyValue(p1.imageProperty(),cardImages.get_suit_num(playerHand.get(0)));
+				KeyValue show2 = new KeyValue(p2.imageProperty(),cardImages.get_suit_num(playerHand.get(1)));
+				KeyValue show3 = new KeyValue(b1.imageProperty(),cardImages.get_suit_num(bankerHand.get(0)));
+				KeyValue show4 = new KeyValue(b2.imageProperty(),cardImages.get_suit_num(bankerHand.get(1)));
+
+				KeyFrame d1  = new KeyFrame(Duration.millis(500), deal1);
+				KeyFrame d2  = new KeyFrame(Duration.millis(1000), deal2);
+				KeyFrame d3  = new KeyFrame(Duration.millis(1500), deal3);
+				KeyFrame d4  = new KeyFrame(Duration.millis(2000), deal4);
+				KeyFrame s1  = new KeyFrame(Duration.millis(3000), show1);
+				KeyFrame s2  = new KeyFrame(Duration.millis(3700), show2);
+				KeyFrame s3  = new KeyFrame(Duration.millis(4400), show3);
+				KeyFrame s4  = new KeyFrame(Duration.millis(5100), show4);
+
+				Timeline dealCards = new Timeline();
+				Timeline dealP3 = new Timeline();
+				Timeline dealB3 = new Timeline();
+				dealCards.getKeyFrames().addAll(d1,d2,d3,d4,s1,s2,s3,s4);
+				dealCards.play();
 
 				//at this point hands got third card is needed.
 				totalWinnings += evaluateWinnings();
 
 				if(playerHand.size() == 3){
-					p3.setImage(cardImages.get_suit_num(playerHand.get(2)));
-					pause.play();
+					KeyValue deal5 = new KeyValue(p3.imageProperty(),cardImages.get_backImage());
+					KeyValue show5 = new KeyValue(p3.imageProperty(),cardImages.get_suit_num(playerHand.get(2)));
+					KeyFrame d5  = new KeyFrame(Duration.millis(6700), deal5);
+					KeyFrame s5  = new KeyFrame(Duration.millis(7700), show5);
+					dealP3.getKeyFrames().addAll(d5,s5);
+					dealP3.play();
 				}
 				if(bankerHand.size() == 3){
-					b3.setImage(cardImages.get_suit_num(bankerHand.get(2)));
-					pause.play();
+						KeyValue deal6 = new KeyValue(b3.imageProperty(),cardImages.get_backImage());
+						KeyValue show6 = new KeyValue(b3.imageProperty(),cardImages.get_suit_num(bankerHand.get(2)));
+						KeyFrame d6  = new KeyFrame(Duration.millis(8700), deal6);
+						KeyFrame s6  = new KeyFrame(Duration.millis(9700), show6);
+						dealB3.getKeyFrames().addAll(d6,s6);
+						dealB3.play();
 				}
-				SetScores();
+
+    		SetScores();
+
 				hands.getChildren().add(playAgain);
 				//layout showing winner
 				mainLayout.setRight(winnerLayout());
 				Money.setText("$ "+ totalWinnings );
-
-
     });
 
 		playAgain.setOnAction(e -> {
@@ -271,7 +303,7 @@ public class BaccaratGame extends Application {
       player_cards = new HBox();
       banker_cards = new HBox();
 			hands.setStyle("-fx-background-color: #267617;");
-      Text PlayerLabel = new Text("\n\n\n		Players Hand     ");
+      Text PlayerLabel = new Text("\n\n\n		Players Hand     \n\n\n\n\n\n\n\n");
 			PlayerLabel.setFont(redFont);
       Text BankerLabel = new Text("\n\n\n		Bankers Hand     ");
 			BankerLabel.setFont(redFont);
@@ -279,13 +311,13 @@ public class BaccaratGame extends Application {
       bankerScore = new Text("\n\n\n	Score: 0");
 			playerScore.setFont(redFont);
 			bankerScore.setFont(redFont);
-      p1 = new ImageView(cardImages.get_backImage());
 
-      p2 = new ImageView(cardImages.get_backImage());
-      p3 = new ImageView(cardImages.get_backImage());
-      b1 = new ImageView(cardImages.get_backImage());
-      b2 = new ImageView(cardImages.get_backImage());
-      b3 = new ImageView(cardImages.get_backImage());
+			p1 = new ImageView(cardImages.get_background());
+			p2 = new ImageView(cardImages.get_background());
+			p3 = new ImageView(cardImages.get_background());
+			b1 = new ImageView(cardImages.get_background());
+			b2 = new ImageView(cardImages.get_background());
+			b3 = new ImageView(cardImages.get_background());
 
       player_cards.getChildren().addAll(PlayerLabel,p1,p2,p3,playerScore);
       banker_cards.getChildren().addAll(BankerLabel,b1,b2,b3,bankerScore);

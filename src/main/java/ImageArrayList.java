@@ -69,6 +69,7 @@ public class ImageArrayList{
     cards.add(new Image("file:src/test/resources/KC.jpg", 100, 175, false, false));
 
     cards.add(new Image("file:src/test/resources/purple_back.jpg", 100, 175, false, false));//52
+    cards.add(new Image("file:src/test/resources/BG.jpg", 100, 175, false, false)); //53
   }
 
   public Image get_suit_num(Card card){
@@ -89,6 +90,10 @@ public class ImageArrayList{
 
   public Image get_backImage(){
     return cards.get(52);
+  }
+
+  public Image get_background(){
+    return cards.get(53);
   }
 
 

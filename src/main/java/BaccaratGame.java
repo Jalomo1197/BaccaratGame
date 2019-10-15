@@ -116,13 +116,6 @@ public class BaccaratGame extends Application {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//Image img = new Image("file:.../test/resources/UML.png");
-		//generate deck
-		//check for size (atleast six)
-			//regenerate if needed
-		//deal hands
-		//call evaluateWinnings
 		launch(args);
 	}
 
@@ -151,19 +144,15 @@ public class BaccaratGame extends Application {
 		mainLayout.setCenter(startLayout());
 		mainLayout.setStyle("-fx-background-color: #267617;");
 
-
 		EventHandler<ActionEvent> callSetScores = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent action) {
 				SetScores();
-				System.out.println("	HERE	");
 			}
 		};
 
 		Timeline finalScores = new Timeline(
-	    new KeyFrame(Duration.seconds(9700),"L", callSetScores)
+			new KeyFrame(Duration.millis(9700),"L", callSetScores)
 		);
-
-
 
 		//PLAY BUTTON EVENT HANDLER
 		playButton.setOnAction(e->{
@@ -233,11 +222,11 @@ public class BaccaratGame extends Application {
 				dealCards.getKeyFrames().addAll(d1,d2,d3,d4,s1,s2,s3,s4);
 				dealCards.play();
 				updateScores.play();
-				finalScores.play();
 
 				//at this point hands got third card is needed.
 				totalWinnings += evaluateWinnings();
 
+				finalScores.play();
 /*
 				Timeline finalScores = new Timeline(
 						new KeyFrame(Duration.seconds(9700), "l", callSetScores)

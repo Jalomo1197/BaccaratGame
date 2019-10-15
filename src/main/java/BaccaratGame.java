@@ -150,8 +150,15 @@ public class BaccaratGame extends Application {
 			}
 		};
 
+		EventHandler<ActionEvent> callHandTotal = new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent action) {
+				playerScore.setText("\n\n\n	Score: " + gameLogic.handTotal(playerHand));
+			}
+		};
+
 		Timeline finalScores = new Timeline(
-			new KeyFrame(Duration.millis(9700),"L", callSetScores)
+			new KeyFrame(Duration.millis(9700),"B", callSetScores),
+			new KeyFrame(Duration.millis(7700),"P", callHandTotal)
 		);
 
 		//PLAY BUTTON EVENT HANDLER

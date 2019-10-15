@@ -188,70 +188,51 @@ public class BaccaratGame extends Application {
       	playerHand = theDealer.dealHand();
       	bankerHand = theDealer.dealHand();
 
-				//ANIMATION__TIMELINES__****************************************************
+				//***********************KEYVALUES****************************************************
+				//current value of First parameter well be changed to Second argument
+				//Dealing facedown cards (4 cards)
 				KeyValue deal1 = new KeyValue(p1.imageProperty(),cardImages.get_backImage());
 				KeyValue deal2 = new KeyValue(p2.imageProperty(),cardImages.get_backImage());
 				KeyValue deal3 = new KeyValue(b1.imageProperty(),cardImages.get_backImage());
 				KeyValue deal4 = new KeyValue(b2.imageProperty(),cardImages.get_backImage());
-				KeyValue show1 = new KeyValue(p1.imageProperty(),cardImages.get_suit_num(playerHand.get(0)));
-				KeyValue show2 = new KeyValue(p2.imageProperty(),cardImages.get_suit_num(playerHand.get(1)));
-				KeyValue show3 = new KeyValue(b1.imageProperty(),cardImages.get_suit_num(bankerHand.get(0)));
-				KeyValue show4 = new KeyValue(b2.imageProperty(),cardImages.get_suit_num(bankerHand.get(1)));
-				//winnerLayout()
-
-				KeyValue showp1Score = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + playerHand.get(0).getWorth());
-				KeyValue showb1Score = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + bankerHand.get(0).getWorth());
-				KeyValue showplayerScore = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(playerHand));
-				KeyValue showbankerScore = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(bankerHand));
-
-
 				KeyFrame d1  = new KeyFrame(Duration.millis(500), deal1);
 				KeyFrame d2  = new KeyFrame(Duration.millis(1000), deal2);
 				KeyFrame d3  = new KeyFrame(Duration.millis(1500), deal3);
 				KeyFrame d4  = new KeyFrame(Duration.millis(2000), deal4);
+				//Showing actual card value (4 cards)
+				KeyValue show1 = new KeyValue(p1.imageProperty(),cardImages.get_suit_num(playerHand.get(0)));
+				KeyValue show2 = new KeyValue(p2.imageProperty(),cardImages.get_suit_num(playerHand.get(1)));
+				KeyValue show3 = new KeyValue(b1.imageProperty(),cardImages.get_suit_num(bankerHand.get(0)));
+				KeyValue show4 = new KeyValue(b2.imageProperty(),cardImages.get_suit_num(bankerHand.get(1)));
 				KeyFrame s1  = new KeyFrame(Duration.millis(3000), show1);
 				KeyFrame s2  = new KeyFrame(Duration.millis(3700), show2);
 				KeyFrame s3  = new KeyFrame(Duration.millis(4400), show3);
 				KeyFrame s4  = new KeyFrame(Duration.millis(5100), show4);
-
-
+				//updateing scores when ever a card is flipped (4 cards)
+				KeyValue showp1Score = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + playerHand.get(0).getWorth());
+				KeyValue showb1Score = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + bankerHand.get(0).getWorth());
+				KeyValue showplayerScore = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(playerHand));
+				KeyValue showbankerScore = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(bankerHand));
 				KeyFrame PScore1 = new KeyFrame(Duration.millis(3000), showp1Score);
 				KeyFrame PScore2 = new KeyFrame(Duration.millis(3700), showplayerScore);
 				KeyFrame BScore1 = new KeyFrame(Duration.millis(4400), showb1Score);
 				KeyFrame BScore2 = new KeyFrame(Duration.millis(5100), showbankerScore);
-
-				Timeline updateScores = new Timeline();
-				showWinner = new Timeline(); //play after winner is assigned
-				Timeline dealCards = new Timeline();
-				Timeline dealP3 = new Timeline();
-				Timeline dealB3 = new Timeline();
-				updateScores.getKeyFrames().addAll(PScore1,PScore2,BScore1,BScore2);
-				dealCards.getKeyFrames().addAll(d1,d2,d3,d4,s1,s2,s3,s4);
-				dealCards.play();
-				updateScores.play();
+				//Adding everything to this timeline
+				Timeline playGame = new Timeline();
+				playGame.getKeyFrames().addAll(d1,d2,d3,d4,s1,s2,s3,s4,PScore1,PScore2,BScore1,BScore2);
+				playGame.play();
 
 				//at this point hands got third card is needed.
 				totalWinnings += evaluateWinnings();
 
 				finalScores.play();
-/*
-				Timeline finalScores = new Timeline(
-						new KeyFrame(Duration.seconds(9700), "l", callSetScores)
-				);*/
-/*
-				KeyValue finalPScore = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(playerHand));
-				KeyValue finalBScore = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(bankerHand));
-				KeyFrame PScore3 = new KeyFrame(Duration.millis(7700), finalPScore);
-				KeyFrame BScore3 = new KeyFrame(Duration.millis(9700), finalBScore);
-				Timeline FinalScores = new Timeline();
-				FinalScores.getKeyFrames().addAll(PScore3,  BScore3);
-				FinalScores.play();
-*/
+				showWinner = new Timeline(); //play after winner is assigned
 				KeyValue showW = new KeyValue(W.textProperty(), "		WINNER:				\n   "+ winner );
 				KeyFrame sW  = new KeyFrame(Duration.millis(10000), showW);
 				showWinner.getKeyFrames().add(sW);
 				showWinner.play();
 				if(playerHand.size() == 3){
+					Timeline dealP3 = new Timeline();
 					KeyValue deal5 = new KeyValue(p3.imageProperty(),cardImages.get_backImage());
 					KeyValue show5 = new KeyValue(p3.imageProperty(),cardImages.get_suit_num(playerHand.get(2)));
 					KeyFrame d5  = new KeyFrame(Duration.millis(6700), deal5);
@@ -260,12 +241,13 @@ public class BaccaratGame extends Application {
 					dealP3.play();
 				}
 				if(bankerHand.size() == 3){
-						KeyValue deal6 = new KeyValue(b3.imageProperty(),cardImages.get_backImage());
-						KeyValue show6 = new KeyValue(b3.imageProperty(),cardImages.get_suit_num(bankerHand.get(2)));
-						KeyFrame d6  = new KeyFrame(Duration.millis(8700), deal6);
-						KeyFrame s6  = new KeyFrame(Duration.millis(9700), show6);
-						dealB3.getKeyFrames().addAll(d6,s6);
-						dealB3.play();
+					Timeline dealB3 = new Timeline();
+					KeyValue deal6 = new KeyValue(b3.imageProperty(),cardImages.get_backImage());
+					KeyValue show6 = new KeyValue(b3.imageProperty(),cardImages.get_suit_num(bankerHand.get(2)));
+					KeyFrame d6  = new KeyFrame(Duration.millis(8700), deal6);
+					KeyFrame s6  = new KeyFrame(Duration.millis(9700), show6);
+					dealB3.getKeyFrames().addAll(d6,s6);
+					dealB3.play();
 				}
 
 				hands.getChildren().add(playAgain);

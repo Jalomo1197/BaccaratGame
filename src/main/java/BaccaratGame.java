@@ -57,7 +57,7 @@ public class BaccaratGame extends Application {
     Image pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false );
     ImageView v2 = new ImageView(pic2);
     Label l1;
-    Text Money, betAmount, betChoice, playerScore, bankerScore;
+    Text Money, betAmount, betChoice, playerScore, bankerScore, W;
     String s[] = {"Player", "Banker", "Draw"};
     TextField value;
     Button confirm, resetCurrentBet, playAgain;
@@ -68,6 +68,7 @@ public class BaccaratGame extends Application {
 		VBox hands;
 		BorderPane mainLayout;
 		MenuItem refresh, exit;
+		Timeline showWinner;
 
 
 
@@ -168,6 +169,7 @@ public class BaccaratGame extends Application {
 
     confirm.setOnAction(e->{
     	  mainLayout.setCenter(gameLayout());
+				mainLayout.setRight(winnerLayout());
 				currentBet = Integer.parseInt(value.getText());
 				totalWinnings = totalWinnings - currentBet;
 				Money.setText("$ "+ totalWinnings );
@@ -190,6 +192,13 @@ public class BaccaratGame extends Application {
 				KeyValue show2 = new KeyValue(p2.imageProperty(),cardImages.get_suit_num(playerHand.get(1)));
 				KeyValue show3 = new KeyValue(b1.imageProperty(),cardImages.get_suit_num(bankerHand.get(0)));
 				KeyValue show4 = new KeyValue(b2.imageProperty(),cardImages.get_suit_num(bankerHand.get(1)));
+				//winnerLayout()
+
+				KeyValue showp1Score = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + playerHand.get(0).getWorth());
+				KeyValue showb1Score = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + bankerHand.get(0).getWorth());
+				KeyValue showplayerScore = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(playerHand));
+				KeyValue showbankerScore = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(bankerHand));
+
 
 				KeyFrame d1  = new KeyFrame(Duration.millis(500), deal1);
 				KeyFrame d2  = new KeyFrame(Duration.millis(1000), deal2);
@@ -200,15 +209,38 @@ public class BaccaratGame extends Application {
 				KeyFrame s3  = new KeyFrame(Duration.millis(4400), show3);
 				KeyFrame s4  = new KeyFrame(Duration.millis(5100), show4);
 
+
+				KeyFrame PScore1 = new KeyFrame(Duration.millis(3000), showp1Score);
+				KeyFrame PScore2 = new KeyFrame(Duration.millis(3700), showplayerScore);
+				KeyFrame BScore1 = new KeyFrame(Duration.millis(4400), showb1Score);
+				KeyFrame BScore2 = new KeyFrame(Duration.millis(5100), showbankerScore);
+	
+				Timeline updateScores = new Timeline();
+				showWinner = new Timeline(); //play after winner is assigned
 				Timeline dealCards = new Timeline();
 				Timeline dealP3 = new Timeline();
 				Timeline dealB3 = new Timeline();
+				updateScores.getKeyFrames().addAll(PScore1,PScore2,BScore1,BScore2);
 				dealCards.getKeyFrames().addAll(d1,d2,d3,d4,s1,s2,s3,s4);
 				dealCards.play();
+				updateScores.play();
+
 
 				//at this point hands got third card is needed.
 				totalWinnings += evaluateWinnings();
 
+				KeyValue finalPScore = new KeyValue(playerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(playerHand));
+				KeyValue finalBScore = new KeyValue(bankerScore.textProperty() ,"\n\n\n	Score: " + gameLogic.handTotal(bankerHand));
+				KeyFrame PScore3 = new KeyFrame(Duration.millis(7700), finalPScore);
+				KeyFrame BScore3 = new KeyFrame(Duration.millis(9700), finalBScore);
+				Timeline FinalScores = new Timeline();
+				FinalScores.getKeyFrames().addAll(PScore3,  BScore3);
+				FinalScores.play();
+
+				KeyValue showW = new KeyValue(W.textProperty(), "		WINNER:				\n   "+ winner );
+				KeyFrame sW  = new KeyFrame(Duration.millis(10000), showW);
+				showWinner.getKeyFrames().add(sW);
+				showWinner.play();
 				if(playerHand.size() == 3){
 					KeyValue deal5 = new KeyValue(p3.imageProperty(),cardImages.get_backImage());
 					KeyValue show5 = new KeyValue(p3.imageProperty(),cardImages.get_suit_num(playerHand.get(2)));
@@ -226,11 +258,9 @@ public class BaccaratGame extends Application {
 						dealB3.play();
 				}
 
-    		SetScores();
-
 				hands.getChildren().add(playAgain);
 				//layout showing winner
-				mainLayout.setRight(winnerLayout());
+				//mainLayout.setRight(winnerLayout());
 				Money.setText("$ "+ totalWinnings );
     });
 
@@ -400,10 +430,9 @@ public class BaccaratGame extends Application {
 
 	public VBox winnerLayout(){
 		VBox winnerBox = new VBox();
-		Text W = new Text();
+		W = new Text();
 		winnerBox.getChildren().add(W);
 		winnerBox.setStyle("-fx-background-color: #267617;");
-		W.setText("		WINNER:		\n		" + winner);
 		W.setFont(redFont);
 		return winnerBox;
 	}

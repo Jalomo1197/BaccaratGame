@@ -117,6 +117,7 @@ public class BaccaratGame extends Application {
 			public void handle(ActionEvent action) {
 				HBox PA = new HBox(spacer4, playAgain);
 				hands.getChildren().add(PA); //may want to delay this
+				mainLayout.setRight(winnerLayout());
 			}
 		};
 
@@ -173,7 +174,7 @@ public class BaccaratGame extends Application {
 				//return and give an error message ***in a new text object (add one to betting scene for error)***
 			// if bet amount 0
 				//return and give an error message
-			//else  
+			//else
 				DealHandsAndPlay();
     });
 
@@ -462,7 +463,6 @@ public class BaccaratGame extends Application {
 
 	public void DealHandsAndPlay(){
 		mainLayout.setCenter(gameLayout());
-		mainLayout.setRight(winnerLayout());
 		totalWinnings = totalWinnings - currentBet;
 		Money.setText("$ "+ totalWinnings );
 		betAmount.setText("$ "+ currentBet);

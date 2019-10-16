@@ -62,7 +62,7 @@ public class BaccaratGame extends Application {
 	Timeline showWinner;
   MenuItem refresh, exit;
 	Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 25);
-	Text Money, betAmount, betChoice, playerScore, bankerScore, W, moneyInfo, betAmountInfo, betChoiceInfo, PlayerLabel, BankerLabel, betInstructions;
+	Text Money, betAmount, betChoice, playerScore, bankerScore, W, moneyInfo, betAmountInfo, betChoiceInfo, PlayerLabel, BankerLabel, betInstructions, spacer, spacer2, spacer3;
 	Button playButton, confirm, resetCurrentBet, playAgain, amount5, amount25, amount50, amount100, amount500;
 	ImageView p1, p2, p3, b1, b2, b3, amount5img, v, v2;
 	Image pic, pic2, img5;
@@ -302,9 +302,7 @@ public class BaccaratGame extends Application {
 		VBox menuBox = new VBox();
 		Menu m = new Menu("Options");
 		m.getItems().addAll(refresh,exit);
-		// create a menubar
     MenuBar mb = new MenuBar();
-    // add menu to menubar
     mb.getMenus().add(m);
 		menuBox.getChildren().add(mb);
 		return menuBox;
@@ -312,10 +310,11 @@ public class BaccaratGame extends Application {
 
 
 	public VBox betLayout() {
-		HBox chooseBet = new HBox();
-		//this HBOX will eventually contain coins that you can choose with
-		chooseBet.getChildren().addAll(betInstructions, amount5,amount25,amount50,amount100, amount500, resetCurrentBet);
-		VBox main = new VBox(chooseBet, c, confirm);
+		HBox BetMessage = new HBox(betInstructions);
+		HBox chips = new HBox(spacer,amount5,amount25,amount50,amount100, amount500);
+		HBox resetB = new HBox(spacer2, resetCurrentBet);
+		HBox confirmB = new HBox(spacer3, confirm);
+		VBox main = new VBox(BetMessage, chips, resetB, c, confirmB);
 		return main;
 	}//end betLayout
 
@@ -337,12 +336,6 @@ public class BaccaratGame extends Application {
 		player_cards = new HBox();
 		banker_cards = new HBox();
 		hands.setStyle("-fx-background-color: #267617;");
-		p1 = new ImageView(cardImages.get_background());
-		p2 = new ImageView(cardImages.get_background());
-		p3 = new ImageView(cardImages.get_background());
-		b1 = new ImageView(cardImages.get_background());
-		b2 = new ImageView(cardImages.get_background());
-		b3 = new ImageView(cardImages.get_background());
 		player_cards.getChildren().addAll(PlayerLabel,p1,p2,p3,playerScore);
 		banker_cards.getChildren().addAll(BankerLabel,b1,b2,b3,bankerScore);
 		hands.getChildren().addAll(banker_cards,player_cards);
@@ -362,6 +355,12 @@ public class BaccaratGame extends Application {
 	//***********************************   INITIALIZAION FUNCTIONS  *************************************************
 	//****************************************************************************************************************
 	public void initializeImages_and_Imageviews(){
+		p1 = new ImageView(cardImages.get_background());
+		p2 = new ImageView(cardImages.get_background());
+		p3 = new ImageView(cardImages.get_background());
+		b1 = new ImageView(cardImages.get_background());
+		b2 = new ImageView(cardImages.get_background());
+		b3 = new ImageView(cardImages.get_background());
 		pic = new Image("file:src/test/resources/PlayButton.png");
 		pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false);
 		v = new ImageView(pic);
@@ -403,11 +402,14 @@ public class BaccaratGame extends Application {
 
 	public void initializaTexts_and_setEffects(){
 			W = new Text();
+			spacer = new Text("		    		 				");
+			spacer2 = new Text("		    		 								");
+			spacer3 = new Text("		    		 								");
 			playerScore = new Text("\n\n\n	Score: 0");
 			bankerScore = new Text("\n\n\n	Score: 0");
 			PlayerLabel = new Text("\n\n\n		Players Hand     \n\n\n\n\n\n\n\n");
 			BankerLabel = new Text("\n\n\n		Bankers Hand     ");
-			betInstructions = new Text("Add chips to bet!");
+			betInstructions = new Text("\n\n\n\n				Add chips to bet!");
 			moneyInfo = new Text("Current Balance:");
 			Money = new Text("$ " + totalWinnings);
 			betAmountInfo = new Text("Current Bet Amount:");
@@ -420,7 +422,7 @@ public class BaccaratGame extends Application {
 			bankerScore.setFont(redFont);
 			PlayerLabel.setFont(redFont);
 			BankerLabel.setFont(redFont);
-			betInstructions.setFont(redFont);
+			betInstructions.setFont(Font.font("Times New Roman", FontWeight.BOLD, 35));
 			moneyInfo.setFont(redFont);
 			Money.setFont(redFont);
 			betAmountInfo.setFont(redFont);

@@ -186,6 +186,8 @@ public class BaccaratGame extends Application {
 			currentBet = 0;
 			betAmount.setText("$ " + currentBet);
 			betChoice.setText(" ");
+			playerScore.setText("\n\n\n	Score: 0");
+			bankerScore.setText("\n\n\n	Score: 0");
 		});
 
 		//MENU ITEM, START NEW FRESH GAME

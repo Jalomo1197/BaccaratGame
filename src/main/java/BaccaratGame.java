@@ -69,6 +69,7 @@ public class BaccaratGame extends Application {
 		BorderPane mainLayout;
 		MenuItem refresh, exit;
 		Timeline showWinner;
+		int showMoneyChange_and_showWinner;
 
 
 
@@ -132,7 +133,7 @@ public class BaccaratGame extends Application {
 		cardImages = new ImageArrayList();
 		confirm = new Button("Confirm");
 		resetCurrentBet = new Button("Reset Bet");
-		playAgain = new Button("Play Again :P");
+		playAgain = new Button("Play Again");
 		playAgain.setStyle("-fx-background-color: #8DE97C; -fx-border-style: none; -fx-text-fill: #148100; -fx-padding: 8;");
 		playAgain.setFont(redFont);
 		value = new TextField();
@@ -143,12 +144,21 @@ public class BaccaratGame extends Application {
     exit = new MenuItem("Exit");
 		mainLayout.setCenter(startLayout());
 		mainLayout.setStyle("-fx-background-color: #267617;");
+		showMoneyChange_and_showWinner = 5100;
 
 		EventHandler<ActionEvent> callSetScores = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent action) {
 				SetScores();
 			}
 		};
+
+
+	/*	EventHandler<ActionEvent> adjustTotalWinngs = new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent action) {
+				Money.setText("$ "+ totalWinnings );
+			}
+		};
+*/
 
 		EventHandler<ActionEvent> callHandTotal = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent action) {
@@ -224,14 +234,10 @@ public class BaccaratGame extends Application {
 
 				//at this point hands got third card is needed.
 				totalWinnings += evaluateWinnings();
-
 				finalScores.play();
-				showWinner = new Timeline(); //play after winner is assigned
-				KeyValue showW = new KeyValue(W.textProperty(), "		WINNER:				\n   "+ winner );
-				KeyFrame sW  = new KeyFrame(Duration.millis(10000), showW);
-				showWinner.getKeyFrames().add(sW);
-				showWinner.play();
+
 				if(playerHand.size() == 3){
+					showMoneyChange_and_showWinner = 7850;
 					Timeline dealP3 = new Timeline();
 					KeyValue deal5 = new KeyValue(p3.imageProperty(),cardImages.get_backImage());
 					KeyValue show5 = new KeyValue(p3.imageProperty(),cardImages.get_suit_num(playerHand.get(2)));
@@ -241,6 +247,7 @@ public class BaccaratGame extends Application {
 					dealP3.play();
 				}
 				if(bankerHand.size() == 3){
+					showMoneyChange_and_showWinner = 9850;
 					Timeline dealB3 = new Timeline();
 					KeyValue deal6 = new KeyValue(b3.imageProperty(),cardImages.get_backImage());
 					KeyValue show6 = new KeyValue(b3.imageProperty(),cardImages.get_suit_num(bankerHand.get(2)));
@@ -250,10 +257,20 @@ public class BaccaratGame extends Application {
 					dealB3.play();
 				}
 
+
+				KeyValue showW = new KeyValue(W.textProperty(), "		WINNER:				\n   "+ winner );
+				KeyValue showMoney = new KeyValue(Money.textProperty(), "$ "+ totalWinnings);
+				KeyFrame sW  = new KeyFrame(Duration.millis(showMoneyChange_and_showWinner), showW);
+				KeyFrame sM = new KeyFrame(Duration.millis(showMoneyChange_and_showWinner), showMoney);
+				Timeline ShowOutCome = new Timeline();
+				ShowOutCome.getKeyFrames().addAll(sM,sW);
+				ShowOutCome.play();
+
+
 				hands.getChildren().add(playAgain);
 				//layout showing winner
 				//mainLayout.setRight(winnerLayout());
-				Money.setText("$ "+ totalWinnings );
+				//Money.setText("$ "+ totalWinnings );
     });
 
 		playAgain.setOnAction(e -> {

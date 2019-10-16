@@ -10,7 +10,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,12 +39,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
-//ANIMATION__TIMELINES__
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-//***
 import javafx.scene.image.*;
 import java.io.IOException;
 import javafx.geometry.Pos;
@@ -57,37 +54,27 @@ public class BaccaratGame extends Application {
 	ArrayList<Card> bankerHand;
 	BaccaratDealer theDealer;
 	BaccaratGameLogic gameLogic;
-	double currentBet = 0;
-	double totalWinnings = 0;
 	ImageArrayList cardImages;
-	Button playButton;
-	String winner; //need to pass winner info accross functions e.g. evaluateWinnings()
-	String bettingOn; //will either be banker, player or tie
-
 	//GUI STUFF
-  PauseTransition pause;
-  HashMap<String, Scene> sceneMap;
-  Image pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false );
-  ImageView v2 = new ImageView(pic2);
-  Text betInstructions;
-  Text Money, betAmount, betChoice, playerScore, bankerScore, W, moneyInfo, betAmountInfo, betChoiceInfo, PlayerLabel, BankerLabel;
-  String s[] = {"Player", "Banker", "Draw"};
-  TextField value;
-  Button confirm, resetCurrentBet, playAgain, amount5, amount25, amount50, amount100, amount500;
-  ChoiceBox<String> c;
-	ImageView p1, p2, p3, b1, b2, b3, amount5img;
-	Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 25);
+	BorderPane mainLayout;
 	HBox player_cards, banker_cards;
 	VBox hands;
-	BorderPane mainLayout;
-	MenuItem refresh, exit;
 	Timeline showWinner;
+  MenuItem refresh, exit;
+	Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 25);
+	Text Money, betAmount, betChoice, playerScore, bankerScore, W, moneyInfo, betAmountInfo, betChoiceInfo, PlayerLabel, BankerLabel, betInstructions;
+	Button playButton, confirm, resetCurrentBet, playAgain, amount5, amount25, amount50, amount100, amount500;
+	ImageView p1, p2, p3, b1, b2, b3, amount5img, v, v2;
+	Image pic, pic2, img5;
+	String s[] = {"Player", "Banker", "Draw"};
+	String winner, bettingOn;
+	ChoiceBox<String> c;
 	int showMoneyChange_and_showWinner;
-	Image pic;
+	double currentBet = 0;
+	double totalWinnings = 0;
 
-	ImageView v;
-	Image img5;
 
+	//MAIN METHOD
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -96,26 +83,23 @@ public class BaccaratGame extends Application {
 	//START METHOD
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		//primaryStage.initStyle(StageStyle.UNDECORATED);
+		//SETTING STAGE
 		primaryStage.setWidth(850);
 		primaryStage.setHeight(700);
 		primaryStage.setResizable(false);
-		pic = new Image("file:src/test/resources/PlayButton.png");
-		v = new ImageView(pic);
+		primaryStage.setTitle("Let's Play Baccarat!!!");
+		//INITIALIZAION OF MANY MEMBERS
+		initializeDataMembers();
+		initializeImages_and_Imageviews();
 		initializeButtons_and_setStyle();
 		initializaTexts_and_setEffects();
-		mainLayout = new BorderPane();
-		cardImages = new ImageArrayList();
-		value = new TextField();
-		c = new ChoiceBox<String>(FXCollections.observableArrayList("Player", "Banker", "Tie"));
-    theDealer = new BaccaratDealer();
-		gameLogic = new BaccaratGameLogic();
-		refresh = new MenuItem("Fresh Start");
-    exit = new MenuItem("Exit");
+		//SETTING SCENE
+		Scene scene = new Scene(mainLayout);
+		primaryStage.setScene(scene);
+		primaryStage.show();
 		mainLayout.setCenter(startLayout());
 		mainLayout.setStyle("-fx-background-color: #267617;");
-		showMoneyChange_and_showWinner = 5100;
-
+		//EVENT HANDLERS TOO CALL FUNCTIONS IN KEYFRAMES/TIMELINE
 		EventHandler<ActionEvent> callSetScores = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent action) {
 				SetScores();
@@ -133,7 +117,17 @@ public class BaccaratGame extends Application {
 			new KeyFrame(Duration.millis(7700),"P", callHandTotal)
 		);
 
+		//PLAY BUTTON EVENT HANDLER
+		playButton.setOnAction(e->{
+			playButton.setGraphic(v2);
+			mainLayout.setCenter(betLayout());
+			mainLayout.setBottom(infoLayout());
+			mainLayout.setTop(menuLayout());
+			theDealer.generateDeck();
+			theDealer.shuffleDeck();
+		});
 
+		//SETONACTION LAMDAS FOR CHIP COINS TO INCREMENT BET
 		amount5.setOnAction(e->{
 			currentBet += 5;
 			betAmount.setText("$ "+ currentBet);
@@ -159,16 +153,13 @@ public class BaccaratGame extends Application {
 			betAmount.setText("$ "+ currentBet);
 		});
 
-		//PLAY BUTTON EVENT HANDLER
-		playButton.setOnAction(e->{
-			playButton.setGraphic(v2);
-			mainLayout.setCenter(betLayout());
-			mainLayout.setBottom(infoLayout());
-			mainLayout.setTop(menuLayout());
-    	theDealer.generateDeck();
-    	theDealer.shuffleDeck();
+		//RESET BET AMOUNT BACK TO ZERO
+		resetCurrentBet.setOnAction(e->{
+					currentBet=0;
+					betAmount.setText("$ " + currentBet);
 		});
 
+		//CONFIRM BET AMOUNT AND PLAY GAME (DEAL CARDS)
     confirm.setOnAction(e->{
     	  mainLayout.setCenter(gameLayout());
 				mainLayout.setRight(winnerLayout());
@@ -243,7 +234,6 @@ public class BaccaratGame extends Application {
 					dealB3.play();
 				}
 
-
 				KeyValue showW = new KeyValue(W.textProperty(), "WINNER:				\n   "+ winner );
 				KeyValue showMoney = new KeyValue(Money.textProperty(), "$ "+ totalWinnings);
 				KeyFrame sW  = new KeyFrame(Duration.millis(showMoneyChange_and_showWinner), showW);
@@ -251,14 +241,10 @@ public class BaccaratGame extends Application {
 				Timeline ShowOutCome = new Timeline();
 				ShowOutCome.getKeyFrames().addAll(sM,sW);
 				ShowOutCome.play();
-
-
-				hands.getChildren().add(playAgain);
-				//layout showing winner
-				//mainLayout.setRight(winnerLayout());
-				//Money.setText("$ "+ totalWinnings );
+				hands.getChildren().add(playAgain); //may want to delay this
     });
 
+		//PLAY ANOTHER GAME (BACK TO BETTING SCENE)
 		playAgain.setOnAction(e -> {
 			mainLayout.setCenter(betLayout());
 			mainLayout.setRight(null);
@@ -267,13 +253,7 @@ public class BaccaratGame extends Application {
 			betChoice.setText(" ");
 		});
 
-
-		resetCurrentBet.setOnAction(e->{
-          currentBet=0;
-          betAmount.setText("$ " + currentBet);
-		});
-
-
+		//MENU ITEM, START NEW FRESH GAME
 		refresh.setOnAction(e -> {
 			currentBet = 0;
 			totalWinnings = 0;
@@ -285,7 +265,7 @@ public class BaccaratGame extends Application {
 			mainLayout.setRight(null);
 		});
 
-
+		//MENU ITEM, EXIT APPLICATION
 		exit.setOnAction(e -> Platform.exit());
 
 
@@ -302,85 +282,12 @@ public class BaccaratGame extends Application {
           	betChoice.setText(bettingOn);
 		}
 		});
-
-	//using lambda for EventHandler: press enter adds info from text field to queue
-      value.setOnKeyPressed(e ->{
-      	if(e.getCode().equals(KeyCode.ENTER)){
-      		currentBet = Integer.parseInt(value.getText());
-      }});
+	} //END OF START FUNCTION
 
 
-      primaryStage.setTitle("Let's Play Baccarat!!!");
-      Scene scene = new Scene(mainLayout);
-      primaryStage.setScene(scene);
-      primaryStage.show();
-	} //end start function
-
-
-    public void SetScores(){
-        bankerScore.setText("\n\n\n	Score: " + gameLogic.handTotal(bankerHand));
-        playerScore.setText("\n\n\n	Score: " + gameLogic.handTotal(playerHand));
-    }
-
-
-			public double evaluateWinnings() {
-				winner = gameLogic.whoWon(playerHand, bankerHand);
-				//check if for 8 or 9s, To check for proper win.
-				int playerTotal = gameLogic.handTotal(playerHand);
-				int bankerTotal = gameLogic.handTotal(bankerHand);
-				boolean pNaturalWin = (playerTotal == 9 || playerTotal == 8);
-				boolean bNaturalWin = (bankerTotal == 9 || bankerTotal == 8);
-
-				if (winner == "Player" && winner == bettingOn && pNaturalWin)
-					return currentBet*2;
-				else if (winner == "Banker" && winner == bettingOn && bNaturalWin)
-					return currentBet*2;
-				else if (winner == "Draw" && winner == bettingOn && pNaturalWin && bNaturalWin)
-					return currentBet*2;
-
-				//else we have to add cards to Hands
-				Card newCard = null; //null
-				//Player goes first
-				if (gameLogic.evaluatePlayerDraw(playerHand)){ //If player does get another card
-					//size check was done at dealing, so safe to execute.
-					newCard = theDealer.drawOne();
-					playerHand.add(newCard);
-				}
-				//Banker goes second
-				if (gameLogic.evaluateBankerDraw(bankerHand, newCard)){
-					newCard = theDealer.drawOne();
-					bankerHand.add(newCard);
-				}
-				//call whoWon again
-				winner = gameLogic.whoWon(playerHand, bankerHand);
-				//return the amount won or lost based on the value in currentBet.
-				if (winner == bettingOn)
-					return currentBet*2;
-				//else it was a draw and return bids
-				return 0;
-			}
-
-
-
-    public VBox gameLayout() {
-      hands  = new VBox();
-      player_cards = new HBox();
-      banker_cards = new HBox();
-			hands.setStyle("-fx-background-color: #267617;");
-			p1 = new ImageView(cardImages.get_background());
-			p2 = new ImageView(cardImages.get_background());
-			p3 = new ImageView(cardImages.get_background());
-			b1 = new ImageView(cardImages.get_background());
-			b2 = new ImageView(cardImages.get_background());
-			b3 = new ImageView(cardImages.get_background());
-      player_cards.getChildren().addAll(PlayerLabel,p1,p2,p3,playerScore);
-      banker_cards.getChildren().addAll(BankerLabel,b1,b2,b3,bankerScore);
-      hands.getChildren().addAll(banker_cards,player_cards);
-      return hands;
-    }//end of gameLayout
-
-
-	//method to create our first scene with controls
+	//****************************************************************************************************************
+	//*****************************      LAYOUT FUNCTIONS FOR BORDERPANE    ******************************************
+	//****************************************************************************************************************
 	public VBox startLayout() {
 		VBox startBox = new VBox(playButton);
 		startBox.setPadding(new Insets(90));
@@ -389,6 +296,19 @@ public class BaccaratGame extends Application {
 		startBox.setStyle("-fx-background-color:black;");
 		return startBox;
 	}//end createStartScene
+
+
+	public VBox menuLayout(){
+		VBox menuBox = new VBox();
+		Menu m = new Menu("Options");
+		m.getItems().addAll(refresh,exit);
+		// create a menubar
+    MenuBar mb = new MenuBar();
+    // add menu to menubar
+    mb.getMenus().add(m);
+		menuBox.getChildren().add(mb);
+		return menuBox;
+	}
 
 
 	public VBox betLayout() {
@@ -412,24 +332,40 @@ public class BaccaratGame extends Application {
 	}//end infoLayout
 
 
+	public VBox gameLayout() {
+		hands  = new VBox();
+		player_cards = new HBox();
+		banker_cards = new HBox();
+		hands.setStyle("-fx-background-color: #267617;");
+		p1 = new ImageView(cardImages.get_background());
+		p2 = new ImageView(cardImages.get_background());
+		p3 = new ImageView(cardImages.get_background());
+		b1 = new ImageView(cardImages.get_background());
+		b2 = new ImageView(cardImages.get_background());
+		b3 = new ImageView(cardImages.get_background());
+		player_cards.getChildren().addAll(PlayerLabel,p1,p2,p3,playerScore);
+		banker_cards.getChildren().addAll(BankerLabel,b1,b2,b3,bankerScore);
+		hands.getChildren().addAll(banker_cards,player_cards);
+		return hands;
+	}//end of gameLayout
+
+
 	public VBox winnerLayout(){
 		VBox winnerBox = new VBox();
 		winnerBox.getChildren().add(W);
 		winnerBox.setStyle("-fx-background-color: #267617;");
 		return winnerBox;
 	}
+	//END OF LAYOUT FUNCTIONS
 
-
-	public VBox menuLayout(){
-		VBox menuBox = new VBox();
-		Menu m = new Menu("Options");
-		m.getItems().addAll(refresh,exit);
-		// create a menubar
-    MenuBar mb = new MenuBar();
-    // add menu to menubar
-    mb.getMenus().add(m);
-		menuBox.getChildren().add(mb);
-		return menuBox;
+	//****************************************************************************************************************
+	//***********************************   INITIALIZAION FUNCTIONS  *************************************************
+	//****************************************************************************************************************
+	public void initializeImages_and_Imageviews(){
+		pic = new Image("file:src/test/resources/PlayButton.png");
+		pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false);
+		v = new ImageView(pic);
+		v2 = new ImageView(pic2);
 	}
 
 
@@ -463,6 +399,7 @@ public class BaccaratGame extends Application {
 		resetCurrentBet.setFont(redFont);
 		resetCurrentBet.setEffect(glow);
 	}
+
 
 	public void initializaTexts_and_setEffects(){
 			W = new Text();
@@ -520,4 +457,60 @@ public class BaccaratGame extends Application {
 	}
 
 
-}
+	public void initializeDataMembers(){
+		mainLayout = new BorderPane();
+		cardImages = new ImageArrayList();
+		c = new ChoiceBox<String>(FXCollections.observableArrayList("Player", "Banker", "Tie"));
+    theDealer = new BaccaratDealer();
+		gameLogic = new BaccaratGameLogic();
+		refresh = new MenuItem("Fresh Start");
+    exit = new MenuItem("Exit");
+		showMoneyChange_and_showWinner = 5100;
+	}
+	//END OF INITIALIZAION FUNCTIONS
+
+	//****************************************************************************************************************
+	//***********************************   LOGIC FUNCTIONS  *************************************************
+	//****************************************************************************************************************
+	public void SetScores(){
+			bankerScore.setText("\n\n\n	Score: " + gameLogic.handTotal(bankerHand));
+			playerScore.setText("\n\n\n	Score: " + gameLogic.handTotal(playerHand));
+	}
+
+
+	public double evaluateWinnings() {
+		winner = gameLogic.whoWon(playerHand, bankerHand);
+		//check if for 8 or 9s, To check for proper win.
+		int playerTotal = gameLogic.handTotal(playerHand);
+		int bankerTotal = gameLogic.handTotal(bankerHand);
+		boolean pNaturalWin = (playerTotal == 9 || playerTotal == 8);
+		boolean bNaturalWin = (bankerTotal == 9 || bankerTotal == 8);
+		if (winner == "Player" && winner == bettingOn && pNaturalWin)
+			return currentBet*2;
+		else if (winner == "Banker" && winner == bettingOn && bNaturalWin)
+			return currentBet*2;
+		else if (winner == "Draw" && winner == bettingOn && pNaturalWin && bNaturalWin)
+			return currentBet*2;
+		//else we have to add cards to Hands
+		Card newCard = null; //null
+		//Player goes first
+		if (gameLogic.evaluatePlayerDraw(playerHand)){ //If player does get another card
+			//size check was done at dealing, so safe to execute.
+			newCard = theDealer.drawOne();
+			playerHand.add(newCard);
+		}
+		//Banker goes second
+		if (gameLogic.evaluateBankerDraw(bankerHand, newCard)){
+			newCard = theDealer.drawOne();
+			bankerHand.add(newCard);
+		}
+		//call whoWon again
+		winner = gameLogic.whoWon(playerHand, bankerHand);
+		//return the amount won or lost based on the value in currentBet.
+		if (winner == bettingOn)
+			return currentBet*2;
+		//else it was a draw and return bids
+		return 0;
+	}
+
+}//END OF CLASS

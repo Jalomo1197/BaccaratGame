@@ -1,4 +1,15 @@
-import javafx.scene.shape.Circle;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.effect.Glow;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
@@ -58,14 +69,14 @@ public class BaccaratGame extends Application {
   HashMap<String, Scene> sceneMap;
   Image pic2 = new Image("file:src/test/resources/PlayButton.png", 500, 0, false, false );
   ImageView v2 = new ImageView(pic2);
-  Label l1;
-  Text Money, betAmount, betChoice, playerScore, bankerScore, W;
+  Text betInstructions;
+  Text Money, betAmount, betChoice, playerScore, bankerScore, W, moneyInfo, betAmountInfo, betChoiceInfo, PlayerLabel, BankerLabel;
   String s[] = {"Player", "Banker", "Draw"};
   TextField value;
   Button confirm, resetCurrentBet, playAgain, amount5, amount25, amount50, amount100, amount500;
   ChoiceBox<String> c;
 	ImageView p1, p2, p3, b1, b2, b3, amount5img;
-	Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 20);
+	Font redFont = Font.font("Times New Roman", FontWeight.BOLD, 25);
 	HBox player_cards, banker_cards;
 	VBox hands;
 	BorderPane mainLayout;
@@ -86,20 +97,13 @@ public class BaccaratGame extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		//primaryStage.initStyle(StageStyle.UNDECORATED);
-		Circle clip = new Circle(300, 200, 200);
 		primaryStage.setWidth(850);
-		primaryStage.setHeight(600);
+		primaryStage.setHeight(700);
 		primaryStage.setResizable(false);
 		pic = new Image("file:src/test/resources/PlayButton.png");
 		v = new ImageView(pic);
-
-		img5 = new Image("file:src/test/resources/5.jpg");
-		amount5img = new ImageView(img5);
-		amount5img.setClip(clip);
-
 		initializeButtons_and_setStyle();
-
-		pause = new PauseTransition(Duration.seconds(3));
+		initializaTexts_and_setEffects();
 		mainLayout = new BorderPane();
 		cardImages = new ImageArrayList();
 		value = new TextField();
@@ -118,14 +122,6 @@ public class BaccaratGame extends Application {
 			}
 		};
 
-
-	/*	EventHandler<ActionEvent> adjustTotalWinngs = new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent action) {
-				Money.setText("$ "+ totalWinnings );
-			}
-		};
-*/
-
 		EventHandler<ActionEvent> callHandTotal = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent action) {
 				playerScore.setText("\n\n\n	Score: " + gameLogic.handTotal(playerHand));
@@ -137,10 +133,35 @@ public class BaccaratGame extends Application {
 			new KeyFrame(Duration.millis(7700),"P", callHandTotal)
 		);
 
+
+		amount5.setOnAction(e->{
+			currentBet += 5;
+			betAmount.setText("$ "+ currentBet);
+		});
+
+		amount25.setOnAction(e->{
+			currentBet += 25;
+			betAmount.setText("$ "+ currentBet);
+		});
+
+		amount50.setOnAction(e->{
+			currentBet += 50;
+			betAmount.setText("$ "+ currentBet);
+		});
+
+		amount100.setOnAction(e->{
+			currentBet += 100;
+			betAmount.setText("$ "+ currentBet);
+		});
+
+		amount500.setOnAction(e->{
+			currentBet += 500;
+			betAmount.setText("$ "+ currentBet);
+		});
+
 		//PLAY BUTTON EVENT HANDLER
 		playButton.setOnAction(e->{
 			playButton.setGraphic(v2);
-			pause.play();
 			mainLayout.setCenter(betLayout());
 			mainLayout.setBottom(infoLayout());
 			mainLayout.setTop(menuLayout());
@@ -151,7 +172,6 @@ public class BaccaratGame extends Application {
     confirm.setOnAction(e->{
     	  mainLayout.setCenter(gameLayout());
 				mainLayout.setRight(winnerLayout());
-				currentBet = Integer.parseInt(value.getText());
 				totalWinnings = totalWinnings - currentBet;
 				Money.setText("$ "+ totalWinnings );
 				betAmount.setText("$ "+ currentBet);
@@ -224,7 +244,7 @@ public class BaccaratGame extends Application {
 				}
 
 
-				KeyValue showW = new KeyValue(W.textProperty(), "		WINNER:				\n   "+ winner );
+				KeyValue showW = new KeyValue(W.textProperty(), "WINNER:				\n   "+ winner );
 				KeyValue showMoney = new KeyValue(Money.textProperty(), "$ "+ totalWinnings);
 				KeyFrame sW  = new KeyFrame(Duration.millis(showMoneyChange_and_showWinner), showW);
 				KeyFrame sM = new KeyFrame(Duration.millis(showMoneyChange_and_showWinner), showMoney);
@@ -250,7 +270,7 @@ public class BaccaratGame extends Application {
 
 		resetCurrentBet.setOnAction(e->{
           currentBet=0;
-          value.clear();
+          betAmount.setText("$ " + currentBet);
 		});
 
 
@@ -277,7 +297,7 @@ public class BaccaratGame extends Application {
 		public void changed(ObservableValue ov, Number value, Number new_value)
 		{
 		    // set the text for the label to the selected item
-		    l1.setText(s[new_value.intValue()] + " selected");
+		    //l1.setText(s[new_value.intValue()] + " selected");
 		    bettingOn = s[new_value.intValue()];
           	betChoice.setText(bettingOn);
 		}
@@ -304,9 +324,6 @@ public class BaccaratGame extends Application {
 
 
 			public double evaluateWinnings() {
-				//This method will determine
-				//if the user won or lost their bet
-				//call whowon
 				winner = gameLogic.whoWon(playerHand, bankerHand);
 				//check if for 8 or 9s, To check for proper win.
 				int playerTotal = gameLogic.handTotal(playerHand);
@@ -321,7 +338,6 @@ public class BaccaratGame extends Application {
 				else if (winner == "Draw" && winner == bettingOn && pNaturalWin && bNaturalWin)
 					return currentBet*2;
 
-
 				//else we have to add cards to Hands
 				Card newCard = null; //null
 				//Player goes first
@@ -335,13 +351,11 @@ public class BaccaratGame extends Application {
 					newCard = theDealer.drawOne();
 					bankerHand.add(newCard);
 				}
-
 				//call whoWon again
 				winner = gameLogic.whoWon(playerHand, bankerHand);
 				//return the amount won or lost based on the value in currentBet.
 				if (winner == bettingOn)
 					return currentBet*2;
-
 				//else it was a draw and return bids
 				return 0;
 			}
@@ -353,26 +367,15 @@ public class BaccaratGame extends Application {
       player_cards = new HBox();
       banker_cards = new HBox();
 			hands.setStyle("-fx-background-color: #267617;");
-      Text PlayerLabel = new Text("\n\n\n		Players Hand     \n\n\n\n\n\n\n\n");
-			PlayerLabel.setFont(redFont);
-      Text BankerLabel = new Text("\n\n\n		Bankers Hand     ");
-			BankerLabel.setFont(redFont);
-	    playerScore = new Text("\n\n\n	Score: 0");
-      bankerScore = new Text("\n\n\n	Score: 0");
-			playerScore.setFont(redFont);
-			bankerScore.setFont(redFont);
-
 			p1 = new ImageView(cardImages.get_background());
 			p2 = new ImageView(cardImages.get_background());
 			p3 = new ImageView(cardImages.get_background());
 			b1 = new ImageView(cardImages.get_background());
 			b2 = new ImageView(cardImages.get_background());
 			b3 = new ImageView(cardImages.get_background());
-
       player_cards.getChildren().addAll(PlayerLabel,p1,p2,p3,playerScore);
       banker_cards.getChildren().addAll(BankerLabel,b1,b2,b3,bankerScore);
       hands.getChildren().addAll(banker_cards,player_cards);
-
       return hands;
     }//end of gameLayout
 
@@ -391,9 +394,7 @@ public class BaccaratGame extends Application {
 	public VBox betLayout() {
 		HBox chooseBet = new HBox();
 		//this HBOX will eventually contain coins that you can choose with
-		l1 = new Label("Choose who you are betting on!");
-		value.setPromptText("Enter an amount to bid");
-		chooseBet.getChildren().addAll(value, amount5,amount25,amount50,amount100, amount500, resetCurrentBet);
+		chooseBet.getChildren().addAll(betInstructions, amount5,amount25,amount50,amount100, amount500, resetCurrentBet);
 		VBox main = new VBox(chooseBet, c, confirm);
 		return main;
 	}//end betLayout
@@ -403,25 +404,6 @@ public class BaccaratGame extends Application {
 		HBox information = new HBox();
 		information.setStyle("-fx-background-color: #000000");
 		information.setSpacing(20);
-
-		Text moneyInfo = new Text("Current Balance:");
-		moneyInfo.setFont(redFont);
-		moneyInfo.setFill(Color.ANTIQUEWHITE);
-		Text betAmountInfo = new Text("Current Bet Amount:");
-		betAmountInfo.setFont(redFont);
-		betAmountInfo.setFill(Color.ANTIQUEWHITE);
-		Text betChoiceInfo = new Text("Betting on the ");
-		betChoiceInfo.setFont(redFont);
-		betChoiceInfo.setFill(Color.ANTIQUEWHITE);
-		Money = new Text("$ " + totalWinnings);
-		Money.setFont(redFont);
-		Money.setFill(Color.ORANGERED);
-		betAmount = new Text("$ "+ currentBet);
-		betAmount.setFont(redFont);
-		betAmount.setFill(Color.ORANGERED);
-		betChoice = new Text();
-		betChoice.setFont(redFont);
-		betChoice.setFill(Color.ORANGERED);
 		VBox moneyBox = new VBox(moneyInfo, Money);
 		VBox betBox = new VBox(betAmountInfo, betAmount);
 		VBox choice = new VBox(betChoiceInfo, betChoice);
@@ -432,10 +414,8 @@ public class BaccaratGame extends Application {
 
 	public VBox winnerLayout(){
 		VBox winnerBox = new VBox();
-		W = new Text();
 		winnerBox.getChildren().add(W);
 		winnerBox.setStyle("-fx-background-color: #267617;");
-		W.setFont(redFont);
 		return winnerBox;
 	}
 
@@ -463,8 +443,7 @@ public class BaccaratGame extends Application {
 		amount500 = new Button("$500");
 		playAgain = new Button("Play Again");
 		resetCurrentBet = new Button("Reset Bet");
-
-
+		//setting styles
 		playButton.setStyle("-fx-background-color:black;");
 		confirm.setStyle("-fx-background-color: #8DE97C; -fx-border-style: none; -fx-text-fill: #148100; -fx-padding: 8;");
 		amount5.setStyle("-fx-background-color: #F90808;	-fx-background-radius: 5em; -fx-min-width: 70px; -fx-min-height: 70px; -fx-max-width: 70px; -fx-max-height: 70px;");
@@ -474,13 +453,70 @@ public class BaccaratGame extends Application {
 		amount500.setStyle("-fx-background-color: #F40793;	-fx-background-radius: 5em; -fx-min-width: 70px; -fx-min-height: 70px; -fx-max-width: 70px; -fx-max-height: 70px;");
 		playAgain.setStyle("-fx-background-color: #8DE97C; -fx-border-style: none; -fx-text-fill: #148100; -fx-padding: 8;");
 		resetCurrentBet.setStyle("-fx-background-color: #8DE97C; -fx-border-style: none; -fx-text-fill: #148100; -fx-padding: 8;");
-
-
 		//amount5.setGraphic(amount5img);
+		Glow glow = new Glow(0.5);
 		confirm.setFont(redFont);
+		confirm.setEffect(glow);
 		playButton.setGraphic(v);
 		playAgain.setFont(redFont);
+		playAgain.setEffect(glow);
 		resetCurrentBet.setFont(redFont);
+		resetCurrentBet.setEffect(glow);
+	}
+
+	public void initializaTexts_and_setEffects(){
+			W = new Text();
+			playerScore = new Text("\n\n\n	Score: 0");
+			bankerScore = new Text("\n\n\n	Score: 0");
+			PlayerLabel = new Text("\n\n\n		Players Hand     \n\n\n\n\n\n\n\n");
+			BankerLabel = new Text("\n\n\n		Bankers Hand     ");
+			betInstructions = new Text("Add chips to bet!");
+			moneyInfo = new Text("Current Balance:");
+			Money = new Text("$ " + totalWinnings);
+			betAmountInfo = new Text("Current Bet Amount:");
+			betAmount = new Text("$ "+ currentBet);
+			betChoiceInfo = new Text("Betting on the ");
+			betChoice = new Text();
+			//setting font
+			W.setFont(redFont);
+			playerScore.setFont(redFont);
+			bankerScore.setFont(redFont);
+			PlayerLabel.setFont(redFont);
+			BankerLabel.setFont(redFont);
+			betInstructions.setFont(redFont);
+			moneyInfo.setFont(redFont);
+			Money.setFont(redFont);
+			betAmountInfo.setFont(redFont);
+			betAmount.setFont(redFont);
+			betChoiceInfo.setFont(redFont);
+			betChoice.setFont(redFont);
+			W.setFill(Color.ANTIQUEWHITE);
+			//setting fill
+			playerScore.setFill(Color.ANTIQUEWHITE);
+			bankerScore.setFill(Color.ANTIQUEWHITE);
+			PlayerLabel.setFill(Color.ANTIQUEWHITE);
+			BankerLabel.setFill(Color.ANTIQUEWHITE);
+			betInstructions.setFill(Color.ANTIQUEWHITE);
+			moneyInfo.setFill(Color.ANTIQUEWHITE);
+			Money.setFill(Color.ORANGERED);
+			betAmountInfo.setFill(Color.ANTIQUEWHITE);
+			betAmount.setFill(Color.ORANGERED);
+			betChoiceInfo.setFill(Color.ANTIQUEWHITE);
+			betChoice.setFill(Color.ORANGERED);
+			//setting glow effect
+			Glow glow = new Glow(2.0);
+			W.setEffect(glow);
+			playerScore.setEffect(glow);
+			bankerScore.setEffect(glow);
+			PlayerLabel.setEffect(glow);
+			BankerLabel.setEffect(glow);
+			betInstructions.setEffect(glow);
+			moneyInfo.setEffect(glow);
+			Money.setEffect(glow);
+			betAmountInfo.setEffect(glow);
+			betAmount.setEffect(glow);
+			betChoiceInfo.setEffect(glow);
+			betChoice.setEffect(glow);
 	}
 
 

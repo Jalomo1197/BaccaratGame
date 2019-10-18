@@ -194,12 +194,15 @@ public class BaccaratGame extends Application {
 		refresh.setOnAction(e -> {
 			currentBet = 0;
 			totalWinnings = 0;
+			pullCards();
 			theDealer.generateDeck();
 			theDealer.shuffleDeck();
 			betAmount.setText("$ " + currentBet);
 			Money.setText("$ "+ totalWinnings );
 			mainLayout.setCenter(betLayout());
 			mainLayout.setRight(null);
+			playerScore.setText("\n\n\n	Score: 0");
+			bankerScore.setText("\n\n\n	Score: 0");
 		});
 
 		//MENU ITEM, EXIT APPLICATION
